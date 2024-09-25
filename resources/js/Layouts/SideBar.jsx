@@ -10,10 +10,10 @@ export default function SideBar() {
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
                     <Sidebar.Item icon={HiChartPie}>
-                        <Link href="/dashboard">Dashboard</Link>
+                        <Link href={route('dashboard')}>Dashboard</Link>
                     </Sidebar.Item>
                     <Sidebar.Item icon={HiShoppingBag}>
-                        <Link href="/RJ/PasienRawatJalan">RJ</Link>
+                        <Link href={route('RJ.PasienRawatJalan')}>RJ</Link>
                     </Sidebar.Item>
                     <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
                         <Sidebar.Item href="#">Products</Sidebar.Item>
