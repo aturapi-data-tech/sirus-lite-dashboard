@@ -182,7 +182,7 @@ export default function Authenticated({ user, header, children }) {
             {/* sideBar */}
             <div className='w-full'>
                 <div className="relative">
-                    <div className={(showingNavigationSideBar ? 'absolute w-full' : 'hidden')}>
+                    <div className={(showingNavigationSideBar ? 'absolute w-full z-40' : 'hidden')}>
                         <div className='h-[calc(100vh-68px)] w-full flex'>
                             <SideBar className='bg-red-300'></SideBar>
                             <div className="w-full" onClick={() => setShowingNavigationSideBar(false)}></div>
