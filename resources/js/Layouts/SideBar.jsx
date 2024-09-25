@@ -1,7 +1,7 @@
 
 
 import { Sidebar } from "flowbite-react";
-
+import { Link } from "@inertiajs/react";
 import { HiChartPie, HiShoppingBag } from "react-icons/hi";
 
 export default function SideBar() {
@@ -9,8 +9,11 @@ export default function SideBar() {
         <Sidebar aria-label="Sidebar with multi-level dropdown example">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item href="dashboard" icon={HiChartPie}>
-                        Dashboard
+                    <Sidebar.Item icon={HiChartPie}>
+                        <Link href="/dashboard">Dashboard</Link>
+                    </Sidebar.Item>
+                    <Sidebar.Item icon={HiShoppingBag}>
+                        <Link href="/RJ/PasienRawatJalan">RJ</Link>
                     </Sidebar.Item>
                     <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
                         <Sidebar.Item href="#">Products</Sidebar.Item>
