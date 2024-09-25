@@ -24,14 +24,14 @@ export default function Dashboard(props) {
     const jmlKunjunganKronis = queryPasienRJKronis.map(item => item.jml_kunjungan);
 
 
-    // const rjDateUmumPrevYear = queryPasienRJUmumPrevYear.map(item => item.rj_date);
-    // const jmlKunjunganUmumPrevYear = queryPasienRJUmumPrevYear.map(item => item.jml_kunjungan);
+    const rjDateUmumPrevYear = queryPasienRJUmumPrevYear.map(item => item.rj_date);
+    const jmlKunjunganUmumPrevYear = queryPasienRJUmumPrevYear.map(item => item.jml_kunjungan);
 
-    // const rjDateBpjsPrevYear = queryPasienRJBpjsPrevYear.map(item => item.rj_date);
-    // const jmlKunjunganBpjsPrevYear = queryPasienRJBpjsPrevYear.map(item => item.jml_kunjungan);
+    const rjDateBpjsPrevYear = queryPasienRJBpjsPrevYear.map(item => item.rj_date);
+    const jmlKunjunganBpjsPrevYear = queryPasienRJBpjsPrevYear.map(item => item.jml_kunjungan);
 
-    // const rjDateKronisPrevYear = queryPasienRJKronisPrevYear.map(item => item.rj_date);
-    // const jmlKunjunganKronisPrevYear = queryPasienRJKronisPrevYear.map(item => item.jml_kunjungan);
+    const rjDateKronisPrevYear = queryPasienRJKronisPrevYear.map(item => item.rj_date);
+    const jmlKunjunganKronisPrevYear = queryPasienRJKronisPrevYear.map(item => item.jml_kunjungan);
 
     return (
         <AuthenticatedLayout
