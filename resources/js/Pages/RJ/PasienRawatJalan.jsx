@@ -16,7 +16,7 @@ export default function PasienRawatJalan({ auth, myData, mySearch }) {
                 :
                 router.get(route(route().current()), { search: search }, { preserveState: true, replace: true, only: ["myData"] })
         }, 300); // delay 300ms untuk live search
-    }, [myData]);
+    }, [search]);
 
 
 

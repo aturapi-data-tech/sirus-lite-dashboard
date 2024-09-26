@@ -9,11 +9,14 @@ export default function SideBar() {
         <Sidebar aria-label="Sidebar with multi-level dropdown example">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item icon={HiChartPie}>
-                        <Link href={route('dashboard')}>Dashboard</Link>
+                    <Sidebar.Item href={route('dashboard')} icon={HiChartPie}>
+                        Dashboard
                     </Sidebar.Item>
-                    <Sidebar.Item icon={HiShoppingBag}>
-                        <Link href={route('RJ.PasienRawatJalan')}>RJ</Link>
+                    <Sidebar.Item href={route('RJ.PasienRawatJalan')} icon={HiShoppingBag}>
+                        RJ
+                    </Sidebar.Item>
+                    <Sidebar.Item href={route('RJ.PasienRawatJalanPoli')} icon={HiShoppingBag}>
+                        RJ Poli
                     </Sidebar.Item>
                     <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
                         <Sidebar.Item href="#">Products</Sidebar.Item>
