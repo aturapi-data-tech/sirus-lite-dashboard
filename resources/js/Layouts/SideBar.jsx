@@ -6,17 +6,19 @@ import { HiChartPie, HiShoppingBag } from "react-icons/hi";
 
 export default function SideBar() {
     return (
-        <Sidebar aria-label="Sidebar with multi-level dropdown example">
+        <Sidebar aria-label="Sidebar with multi-level dropdown">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item href={route('dashboard')} icon={HiChartPie}>
-                        Dashboard
+                    <Sidebar.Item icon={HiChartPie}>
+                        <Link href={route('dashboard')}>RJ All</Link>
                     </Sidebar.Item>
+
+                    <Sidebar.Item icon={HiChartPie}>
+                        <Link href={route('RJ.PasienRawatJalanPoli')}>RJ / Poli</Link>
+                    </Sidebar.Item>
+
                     <Sidebar.Item href={route('RJ.PasienRawatJalan')} icon={HiShoppingBag}>
-                        RJ
-                    </Sidebar.Item>
-                    <Sidebar.Item href={route('RJ.PasienRawatJalanPoli')} icon={HiShoppingBag}>
-                        RJ Poli
+                        Progress. . .
                     </Sidebar.Item>
                     <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
                         <Sidebar.Item href="#">Products</Sidebar.Item>
