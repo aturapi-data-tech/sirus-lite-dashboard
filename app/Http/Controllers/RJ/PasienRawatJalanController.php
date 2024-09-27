@@ -50,14 +50,14 @@ class PasienRawatJalanController extends Controller
 
 
     // umum bpjs poli
+    ///////////////////////////////////////////////////////
     public function queryPasienRJUmum($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
                 DB::raw("to_char(rj_date,'mm/yyyy') AS rj_date"),
                 DB::raw("to_char(rj_date,'yyyymm') AS rj_date1"),
-                DB::raw("count(*) AS jml_kunjungan"),
-
+                DB::raw("count(*) AS jml_kunjungan")
             )
             ->where('rj_status', '!=', ['A', 'F'])
             ->where(DB::raw("to_char(rj_date,'yyyy')"), '=', $yearRjRef)
@@ -120,6 +120,7 @@ class PasienRawatJalanController extends Controller
     }
 
     // umum bpjs poli per poli
+    ///////////////////////////////////////////////////////
     public function indexRJPoli(Request $request)
     {
 
@@ -221,6 +222,69 @@ class PasienRawatJalanController extends Controller
             ->groupBy(DB::raw("to_char(rj_date,'yyyymm')"))
             ->orderBy('rj_date1',  'asc')
             ->get();
+        return $query;
+    }
+
+    // EMR RJ
+    ///////////////////////////////////////////////////////
+    public function indexEMRRJ(Request $request)
+    {
+
+        $dateRjRef = $request->input('dateRef') ? $request->input('dateRef') : Carbon::now()->format('d/m/Y');
+
+        $queryPasienEMRRJ = $this->queryPasienEmrRJ($dateRjRef);
+
+
+        //return view
+        return inertia('RJ/PasienEMRRawatJalan', [
+            'dateRjRef' => $dateRjRef,
+            'queryPasienEMRRJ' => $queryPasienEMRRJ
+        ]);
+    }
+
+    public function queryPasienEmrRJ($dateRef)
+    {
+        $myRefstatusId = 'A';
+        $myRefdate = $dateRef;
+
+        $query = DB::table('rsview_rjkasir')
+            ->select(
+                DB::raw("to_char(rj_date,'dd/mm/yyyy hh24:mi:ss') AS rj_date"),
+                DB::raw("to_char(rj_date,'yyyymmddhh24miss') AS rj_date1"),
+                'rj_no',
+                'reg_no',
+                'reg_name',
+                'sex',
+                'address',
+                'thn',
+                DB::raw("to_char(birth_date,'dd/mm/yyyy') AS birth_date"),
+                'poli_id',
+                'poli_desc',
+                'dr_id',
+                'dr_name',
+                'klaim_id',
+                'shift',
+                'vno_sep',
+                'no_antrian',
+                'rj_status',
+                'nobooking',
+                'push_antrian_bpjs_status',
+                'push_antrian_bpjs_json',
+                'datadaftarpolirj_json'
+            )
+            ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            ->where('rj_status', '!=', 'F')
+            ->where('klaim_id', '!=', 'KR')
+
+            ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
+
+
+            ->orderBy('dr_name',  'asc')
+            ->orderBy('shift',  'asc')
+            ->orderBy('no_antrian',  'desc')
+            ->orderBy('rj_date1',  'desc')
+            ->get();
+
         return $query;
     }
 }

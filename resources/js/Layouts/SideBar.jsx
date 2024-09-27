@@ -9,13 +9,17 @@ export default function SideBar() {
         <Sidebar aria-label="Sidebar with multi-level dropdown">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item icon={HiChartPie}>
-                        <Link href={route('dashboard')}>RJ All</Link>
-                    </Sidebar.Item>
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Link href={route('dashboard')}>RJ All</Link>
+                    {/* </Sidebar.Item> */}
 
-                    <Sidebar.Item icon={HiChartPie}>
-                        <Link href={route('RJ.PasienRawatJalanPoli')}>RJ / Poli</Link>
-                    </Sidebar.Item>
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Link href={route('RJ.PasienRawatJalanPoli')}>RJ / Poli</Link>
+                    {/* </Sidebar.Item> */}
+
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Link href={route('RJ.PasienEMRRawatJalan')}>EMR RJ</Link>
+                    {/* </Sidebar.Item> */}
 
                     <Sidebar.Item href={route('RJ.PasienRawatJalan')} icon={HiShoppingBag}>
                         Progress. . .

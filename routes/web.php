@@ -37,6 +37,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/RJ/PasienRawatJalan', [PasienRawatJalanController::class, 'index'])->name('RJ.PasienRawatJalan');
     Route::get('/RJ/PasienRawatJalanPoli', [PasienRawatJalanController::class, 'indexRJPoli'])->name('RJ.PasienRawatJalanPoli');
+    Route::get('/RJ/PasienEMRRawatJalan', [PasienRawatJalanController::class, 'indexEMRRJ'])->name('RJ.PasienEMRRawatJalan');
 });
 
 Route::middleware('auth')->group(function () {
