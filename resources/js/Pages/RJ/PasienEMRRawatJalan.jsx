@@ -78,7 +78,7 @@ export default function PasienEMRRawatJalan(props) {
         const badgecolorDiagnosisICDX = datadaftar_json?.diagnosis?.length || 0 ? 'success' : 'failure';
         const badgecolorTerapi = datadaftar_json?.perencanaan?.terapi?.terapi ? 'success' : 'failure';
         const badgecolorEresep = datadaftar_json?.eresep ? 'success' : 'failure';
-        const badgecolorTTDDokter = datadaftar_json?.pengkajianMedis?.drPemeriksa ? 'success' : 'failure';
+        const badgecolorTTDDokter = datadaftar_json?.perencanaan?.pengkajianMedis?.drPemeriksa ? 'success' : 'failure';
         const badgecolorTTDAdministrasi = badgecolorAdministrasiRj;
         const badgecolorTelaahObat = datadaftar_json?.telaahResep ? 'success' : 'failure';
         const badgecolorTelaahResep = datadaftar_json?.telaahObat ? 'success' : 'failure';
