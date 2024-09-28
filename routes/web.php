@@ -6,6 +6,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\RJ\PasienRawatJalanController;
+use App\Http\Controllers\UGD\PasienUGDController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/RJ/PasienRawatJalan', [PasienRawatJalanController::class, 'index'])->name('RJ.PasienRawatJalan');
     Route::get('/RJ/PasienRawatJalanPoli', [PasienRawatJalanController::class, 'indexRJPoli'])->name('RJ.PasienRawatJalanPoli');
     Route::get('/RJ/PasienEMRRawatJalan', [PasienRawatJalanController::class, 'indexEMRRJ'])->name('RJ.PasienEMRRawatJalan');
+
+
+    Route::get('/RJ/PasienEMRUGD', [PasienUGDController::class, 'indexEMRUGD'])->name('RJ.PasienEMRUGD');
 });
 
 Route::middleware('auth')->group(function () {

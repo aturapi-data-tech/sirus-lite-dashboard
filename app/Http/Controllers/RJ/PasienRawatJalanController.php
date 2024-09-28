@@ -271,7 +271,7 @@ class PasienRawatJalanController extends Controller
                 'datadaftarpolirj_json'
             )
             ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
-            ->where('rj_status', '!=', 'F')
+            ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
 
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
@@ -297,6 +297,7 @@ class PasienRawatJalanController extends Controller
                 'datadaftarpolirj_json'
             )
             ->where('rj_status', '!=', ['A', 'F'])
+            ->where('klaim_id', '!=', 'KR')
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $dateRef)
             ->get();
 
