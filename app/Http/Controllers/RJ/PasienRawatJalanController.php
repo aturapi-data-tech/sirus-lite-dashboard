@@ -53,13 +53,11 @@ class PasienRawatJalanController extends Controller
     ///////////////////////////////////////////////////////
     public function queryPasienRJUmum($yearRjRef): Collection
     {
-        $query = DB::table('rstxn_rjhdrs')
-            ->select(
-                DB::raw("to_char(rj_date,'mm/yyyy') AS rj_date"),
-                DB::raw("to_char(rj_date,'yyyymm') AS rj_date1"),
-                DB::raw("count(*) AS jml_kunjungan")
-            )
-            ->where('rj_status', '!=', ['A', 'F'])
+        $query = DB::table('rstxn_rjhdrs')->select(
+            DB::raw("to_char(rj_date,'mm/yyyy') AS rj_date"),
+            DB::raw("to_char(rj_date,'yyyymm') AS rj_date1"),
+            DB::raw("count(*) AS jml_kunjungan")
+        )->where('rj_status', '!=', ['A', 'F'])
             ->where(DB::raw("to_char(rj_date,'yyyy')"), '=', $yearRjRef)
             ->whereIn('klaim_id', function ($query) {
                 $query->select('klaim_id')
@@ -229,16 +227,16 @@ class PasienRawatJalanController extends Controller
     ///////////////////////////////////////////////////////
     public function indexEMRRJ(Request $request)
     {
-
         $dateRjRef = $request->input('dateRef') ? $request->input('dateRef') : Carbon::now()->format('d/m/Y');
 
         $queryPasienEMRRJ = $this->queryPasienEmrRJ($dateRjRef);
-
+        $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($dateRjRef);
 
         //return view
         return inertia('RJ/PasienEMRRawatJalan', [
             'dateRjRef' => $dateRjRef,
-            'queryPasienEMRRJ' => $queryPasienEMRRJ
+            'queryPasienEMRRJ' => $queryPasienEMRRJ,
+            'queryPasienEmrRJKelengkapanPengisianHarian' => $queryPasienEmrRJKelengkapanPengisianHarian
         ]);
     }
 
@@ -283,8 +281,68 @@ class PasienRawatJalanController extends Controller
             ->orderBy('shift',  'asc')
             ->orderBy('no_antrian',  'desc')
             ->orderBy('rj_date1',  'desc')
+            ->paginate(500);
+
+        return $query;
+    }
+
+    public function queryPasienEmrRJKelengkapanPengisianHarian($dateRef): array
+    {
+        //total lengkap
+        ////////////////////////////////////////////////
+        $queryTotal = DB::table('rstxn_rjhdrs')
+            ->select(
+                DB::raw("to_char(rj_date,'dd/mm/yyyy') AS rj_date"),
+                DB::raw("to_char(rj_date,'yyyymmdd') AS rj_date1"),
+                'datadaftarpolirj_json'
+            )
+            ->where('rj_status', '!=', ['A', 'F'])
+            ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $dateRef)
             ->get();
 
+        //    cari berdasarkan JSON Table
+        // emr
+        $queryLengkap = $queryTotal->filter(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+            $anamnesa = isset($datadaftarpolirj_json['anamnesa']) ? 1 : 0;
+            $pemeriksaan = isset($datadaftarpolirj_json['pemeriksaan']) ? 1 : 0;
+            $penilaian = isset($datadaftarpolirj_json['penilaian']) ? 1 : 0;
+            $procedure = isset($datadaftarpolirj_json['procedure']) ? 1 : 0;
+            $diagnosis = isset($datadaftarpolirj_json['diagnosis']) ? 1 : 0;
+            $perencanaan = isset($datadaftarpolirj_json['perencanaan']) ? 1 : 0;
+            $prosentaseEMR =
+                (($anamnesa + $pemeriksaan + $penilaian + $procedure + $diagnosis + $perencanaan) / 6) *
+                100;
+
+            if ($prosentaseEMR >= 80) {
+                return 'x';
+            }
+        })->count();
+
+        // DiagnosisIcd
+        $queryDiagnosisIcd = $queryTotal->filter(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+            $diagnosis = isset($datadaftarpolirj_json['diagnosis']) ? count($datadaftarpolirj_json['diagnosis']) : 0;
+            if ($diagnosis > 0) {
+                return 'x';
+            }
+        })->count();
+
+        // SatuSehat
+        $querySatuSehat = $queryTotal->filter(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+            $satuSehatUuidRJ = isset($datadaftarpolirj_json['satuSehatUuidRJ']) ? count($datadaftarpolirj_json['satuSehatUuidRJ']) : 0;
+            if ($satuSehatUuidRJ > 0) {
+                return 'x';
+            }
+        })->count();
+
+        $query = [
+            'queryTotal' => $queryTotal->count(),
+            'queryLengkap' => $queryLengkap,
+            'queryDiagnosisIcd' => $queryDiagnosisIcd,
+            'querySatuSehat' => $querySatuSehat
+        ];
         return $query;
     }
 }

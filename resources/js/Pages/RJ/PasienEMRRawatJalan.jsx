@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PageLayout from '@/Layouts/PageLayout';
-import { router, Head } from '@inertiajs/react'
-import { TextInput, Button, Label, Table, Pagination, Badge } from 'flowbite-react';
+import { router } from '@inertiajs/react'
+import { TextInput, Button, Label, Table, Badge } from 'flowbite-react';
+import PaginationData from '@/Components/PaginationData';
+import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
+
 export default function PasienEMRRawatJalan(props) {
-    const { auth,
-        dateRjRef,
-        queryPasienEMRRJ,
-    } = props;
+    const { auth, dateRjRef, queryPasienEMRRJ, queryPasienEmrRJKelengkapanPengisianHarian } = props;
 
     const [dateRef, setdateRef] = useState(dateRjRef);
+    const [currentPageRef, setcurrentPageRef] = useState(1);
+
     useEffect(() => {
 
         clearTimeout(window.dateRefTimeout);
@@ -18,12 +20,7 @@ export default function PasienEMRRawatJalan(props) {
                 :
                 router.get(route(route().current()), { dateRef: dateRef }, { preserveState: true, replace: true, only: [] })
         }, 300); // delay 300ms untuk live search
-    }, [dateRef]);
-
-
-    console.log(queryPasienEMRRJ)
-
-
+    }, [dateRef, currentPageRef]);
 
 
 
@@ -83,7 +80,7 @@ export default function PasienEMRRawatJalan(props) {
         const badgecolorTTDAdministrasi = badgecolorAdministrasiRj;
         const badgecolorTelaahObat = datadaftar_json?.telaahResep ? 'success' : 'failure';
         const badgecolorTelaahResep = datadaftar_json?.telaahObat ? 'success' : 'failure';
-        const badgecolorKirimSatuSehat = datadaftar_json?.satuSehatUuidRJ ? 'success' : 'failure';
+        const badgecolorKirimSatuSehat = datadaftar_json?.satuSehatUuidRJ?.length ? 'success' : 'failure';
         const badgecolorKirimDinkesTA = datadaftar_json?.satuDataKesehatanTulungagung ? 'success' : 'failure';
 
         return (
@@ -93,6 +90,9 @@ export default function PasienEMRRawatJalan(props) {
 
                     <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="">
+                            <div className="text-sm font-semibold text-gray-500 text-primary">
+                                Record ke <span className='text-3xl text-gray-900'>{index + 1}</span>
+                            </div>
                             <div className="font-semibold text-primary">
                                 {item.reg_no}
                             </div>
@@ -133,7 +133,7 @@ export default function PasienEMRRawatJalan(props) {
                     <Table.Cell>
                         <div>
                             <div className="font-semibold text-primary">
-                                {item.rj_date}
+                                {item.rj_date + ' / Shift' + item.shift}
                             </div>
                             <div className="flex italic font-semibold text-gray-900">
                                 <Badge color={badgecolorStatus}>
@@ -194,29 +194,62 @@ export default function PasienEMRRawatJalan(props) {
         );
     }
 
-    // function PaginationData(props) {
-    //     const { mycurrentPage, myPage, myTotalPages } = props
-    //     const [currentPage, setCurrentPage] = useState(mycurrentPage);
 
-    //     const onPageChange = () => setCurrentPage(myPage);
+    function ChartUmumBpjs(props) {
+        const { dateRef, data } = props;
 
-    //     return (
-    //         <div className="flex items-center justify-center space-x-4 text-gray-700 flow-x-auto">
-    //             <div className='text-xs'>
-    //                 <p>Tampil
-    //                     <span className='mx-1 font-semibold'>10</span> ke
-    //                     <span className='mx-1 font-semibold'>10</span> dari
-    //                     <span className='mx-1 font-semibold'>{myTotalPages}</span>
-    //                     Data
-    //                 </p>
-    //             </div>
-    //             <Pagination currentPage={currentPage} totalPages={myTotalPages} onPageChange={onPageChange} />
-    //         </div >
-    //     );
-    // }
+        const jmlKunjungan = [data.queryTotal];
+        const jmlKunjunganDesc = 'Total Kunjungan';
+
+        const jmlKunjunganLengkap = [data.queryLengkap];
+        const jmlKunjunganDescLengkap = 'Kelengkapan EMR';
+
+        const jmlKelengkapanDiagnosis = [data.queryDiagnosisIcd];
+        const jmlKelengkapanDescDiagnosis = 'Kelengkapan Diagnosis';
+
+        const jmlKirimSS = [data.querySatuSehat];
+        const jmlKirimDescSS = 'Kirim Satu Sehat';
+
+        const rjDate = [dateRef];
+
+
+        return (
+            <div className='bg-white border border-gray-200 rounded-lg shadow-sm'>
+                <div className='grid grid-cols-2 mx-2 '>
+                    <MyApexCharts myType={'bar'} myWidth={'100%'} myCategories={rjDate} myData={[
+                        {
+                            data: jmlKunjungan,
+                            name: jmlKunjunganDesc
+                        },
+                        {
+                            data: jmlKunjunganLengkap,
+                            name: jmlKunjunganDescLengkap
+                        },
+                        {
+                            data: jmlKelengkapanDiagnosis,
+                            name: jmlKelengkapanDescDiagnosis
+                        },
+                        {
+                            data: jmlKirimSS,
+                            name: jmlKirimDescSS
+                        }
+                    ]}
+                        myChartTitle={'Rawat Jalan Tanggal ' + rjDate} />
+
+
+
+                </div>
+            </div>
+        )
+    }
 
     return (
         <PageLayout user={auth.user}>
+            <div className='mb-4'>
+                <ChartUmumBpjs
+                    data={queryPasienEmrRJKelengkapanPengisianHarian}
+                    dateRef={dateRef} />
+            </div>
 
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
 
@@ -228,40 +261,11 @@ export default function PasienEMRRawatJalan(props) {
                 <div className='h-[calc(100vh-220px)] overflow-auto'>
                     <Table striped hoverable>
                         <Table.Head className='sticky top-0'>
-                            <Table.HeadCell >Pasien</Table.HeadCell>
-                            <Table.HeadCell >Poli</Table.HeadCell>
-                            <Table.HeadCell >Status Layanan</Table.HeadCell>
-                            <Table.HeadCell >Status EMR</Table.HeadCell>
-                            <Table.HeadCell >Action</Table.HeadCell>
-
-                        </Table.Head>
-                        <Table.Body className="divide-y">
-                            {queryPasienEMRRJ.map((item, index) => (
-                                <TableDataRow item={item} index={index} key={index} />
-                            ))}
-                        </Table.Body>
-                    </Table>
-                </div>
-                <div className='flex justify-end'>
-                    {/* <PaginationData mycurrentPage={queryPasienEMRRJ.current_page} myPage={queryPasienEMRRJ.per_page} myTotalPages={queryPasienEMRRJ.total} /> */}
-                </div>
-            </div>
-
-            {/* <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
-
-                <div className='grid grid-cols-12 mb-2'>
-                    <Label htmlFor="base" value="Base input" />
-                    <TextInput id="query" type="text" sizing="md" value={dateRef} onChange={(e) => setdateRef(e.target.value)} />
-                </div>
-
-                <div className='h-[calc(100vh-220px)] overflow-auto'>
-                    <Table striped hoverable>
-                        <Table.Head className='sticky top-0'>
-                            <Table.HeadCell >Pasien</Table.HeadCell>
-                            <Table.HeadCell >Poli</Table.HeadCell>
-                            <Table.HeadCell >Status Layanan</Table.HeadCell>
-                            <Table.HeadCell >Status EMR</Table.HeadCell>
-                            <Table.HeadCell >Action</Table.HeadCell>
+                            <Table.HeadCell>Pasien</Table.HeadCell>
+                            <Table.HeadCell>Poli</Table.HeadCell>
+                            <Table.HeadCell>Status Layanan</Table.HeadCell>
+                            <Table.HeadCell>Status EMR</Table.HeadCell>
+                            <Table.HeadCell>Action</Table.HeadCell>
 
                         </Table.Head>
                         <Table.Body className="divide-y">
@@ -272,10 +276,12 @@ export default function PasienEMRRawatJalan(props) {
                     </Table>
                 </div>
                 <div className='flex justify-end'>
-                    <PaginationData mycurrentPage={queryPasienEMRRJ.current_page} myPage={queryPasienEMRRJ.per_page} myTotalPages={queryPasienEMRRJ.total} />
+                    <PaginationData class="mt-6" links={queryPasienEMRRJ.links} />
                 </div>
-            </div> */}
+            </div>
 
-        </PageLayout>
+
+
+        </PageLayout >
     );
 }
