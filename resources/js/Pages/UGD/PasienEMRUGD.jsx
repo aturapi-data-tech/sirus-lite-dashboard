@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
 import PageLayout from '@/Layouts/PageLayout';
 import { router } from '@inertiajs/react'
 import { TextInput, Button, Label, Table, Badge } from 'flowbite-react';

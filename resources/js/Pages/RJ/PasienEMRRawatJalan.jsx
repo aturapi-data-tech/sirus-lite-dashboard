@@ -1,26 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
+
 import PageLayout from '@/Layouts/PageLayout';
 import { router } from '@inertiajs/react'
 import { TextInput, Button, Label, Table, Badge } from 'flowbite-react';
-import PaginationData from '@/Components/PaginationData';
+import { PaginationData } from '@/Components/PaginationData';
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
 
 export default function PasienEMRRawatJalan(props) {
-    const { auth, dateRjRef, queryPasienEMRRJ, queryPasienEmrRJKelengkapanPengisianHarian } = props;
+    const { auth, date, page, show, queryPasienEMRRJ, queryPasienEmrRJKelengkapanPengisianHarian } = props;
 
-    const [dateRef, setdateRef] = useState(dateRjRef);
-    const [currentPageRef, setcurrentPageRef] = useState(1);
+    const [dateRef, setDateRef] = useState(date);
+    const [pageRef, setPageRef] = useState(page);
+    const [showRef, setShowRef] = useState(show);
 
     useEffect(() => {
-
-        clearTimeout(window.dateRefTimeout);
-        window.dateRefTimeout = setTimeout(() => {
-            dateRef.trim() === "" || dateRef === null ?
+        clearTimeout(window.dateRefimeout);
+        window.dateRefimeout = setTimeout(() => {
+            date.trim() === "" || date === null ?
                 router.get(route(route().current()), {}, { preserveState: true, replace: true, only: [] })
                 :
-                router.get(route(route().current()), { dateRef: dateRef }, { preserveState: true, replace: true, only: [] })
+                router.get(route(route().current()), { date: dateRef, page: pageRef, show: showRef }, { preserveState: true, replace: true, only: [] })
         }, 300); // delay 300ms untuk live search
-    }, [dateRef, currentPageRef]);
+    }, [dateRef, pageRef, showRef]);
+
+    useEffect(() => {
+        if (showRef || dateRef) {
+            setPageRef(1);
+        }
+    }, [dateRef, , showRef]);
+
+    useEffect(() => {
+        if (pageRef > queryPasienEMRRJ.last_page) {
+            setPageRef(queryPasienEMRRJ.last_page);
+        } else if (pageRef < 1) {
+            setPageRef(1);
+        }
+    }, [pageRef]);
+
 
 
 
@@ -90,9 +107,9 @@ export default function PasienEMRRawatJalan(props) {
 
                     <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="">
-                            <div className="text-sm font-semibold text-gray-500 text-primary">
+                            {/* <div className="text-sm font-semibold text-gray-500 text-primary">
                                 Record ke <span className='text-3xl text-gray-900'>{index + 1}</span>
-                            </div>
+                            </div> */}
                             <div className="font-semibold text-primary">
                                 {item.reg_no}
                             </div>
@@ -252,12 +269,24 @@ export default function PasienEMRRawatJalan(props) {
             </div>
 
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
+                <div className='flex justify-between gap-x-2'>
+                    <div className='flex justify-between gap-x-2'>
+                        <div className=''>
+                            <Label htmlFor="Tanggal" value="Tanggal" />
+                            <TextInput id="Tanggal" type="text" sizing="md" value={dateRef} onChange={(e) => setDateRef(e.target.value)} />
+                        </div>
 
-                <div className='grid grid-cols-12 mb-2'>
-                    <Label htmlFor="base" value="Base input" />
-                    <TextInput id="query" type="text" sizing="md" value={dateRef} onChange={(e) => setdateRef(e.target.value)} />
+                        <div className=''>
+                            <Label htmlFor="Pagination" value="Pagination" />
+                            <TextInput id="Pagination" type="text" sizing="md" value={pageRef} onChange={(e) => setPageRef(e.target.value)} />
+                        </div>
+                    </div>
+
+                    <div className=''>
+                        <Label htmlFor="Show" value="Show" />
+                        <TextInput id="Show" type="text" sizing="md" value={showRef} onChange={(e) => setShowRef(e.target.value)} />
+                    </div>
                 </div>
-
                 <div className='h-[calc(100vh-220px)] overflow-auto'>
                     <Table striped hoverable>
                         <Table.Head className='sticky top-0'>
@@ -274,10 +303,12 @@ export default function PasienEMRRawatJalan(props) {
                             ))}
                         </Table.Body>
                     </Table>
+
+                    <div className='sticky bottom-0 flex justify-end py-1 bg-white'>
+                        <PaginationData class="mt-6" links={queryPasienEMRRJ.links} total={queryPasienEMRRJ.total} from={queryPasienEMRRJ.from} to={queryPasienEMRRJ.to} current_page={queryPasienEMRRJ.current_page} last_page={queryPasienEMRRJ.last_page} />
+                    </div>
                 </div>
-                <div className='flex justify-end'>
-                    <PaginationData class="mt-6" links={queryPasienEMRRJ.links} />
-                </div>
+
             </div>
 
 

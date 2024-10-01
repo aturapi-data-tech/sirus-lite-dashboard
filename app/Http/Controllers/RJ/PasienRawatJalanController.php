@@ -227,20 +227,26 @@ class PasienRawatJalanController extends Controller
     ///////////////////////////////////////////////////////
     public function indexEMRRJ(Request $request)
     {
-        $dateRjRef = $request->input('dateRef') ? $request->input('dateRef') : Carbon::now()->format('d/m/Y');
+        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
+        $page = $request->input('page') ? $request->input('page') : 1;
+        $show = $request->input('show') ? $request->input('show') : 10;
 
-        $queryPasienEMRRJ = $this->queryPasienEmrRJ($dateRjRef);
-        $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($dateRjRef);
+
+
+        $queryPasienEMRRJ = $this->queryPasienEmrRJ($date, $show);
+        $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($date);
 
         //return view
         return inertia('RJ/PasienEMRRawatJalan', [
-            'dateRjRef' => $dateRjRef,
+            'date' => $date,
+            'page' => $page,
+            'show' => $show,
             'queryPasienEMRRJ' => $queryPasienEMRRJ,
             'queryPasienEmrRJKelengkapanPengisianHarian' => $queryPasienEmrRJKelengkapanPengisianHarian
         ]);
     }
 
-    public function queryPasienEmrRJ($dateRef)
+    public function queryPasienEmrRJ($dateRef, $show = 10)
     {
         $myRefstatusId = 'A';
         $myRefdate = $dateRef;
@@ -281,7 +287,7 @@ class PasienRawatJalanController extends Controller
             ->orderBy('shift',  'asc')
             ->orderBy('no_antrian',  'desc')
             ->orderBy('rj_date1',  'desc')
-            ->paginate(500);
+            ->paginate($show);
 
         return $query;
     }

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
 import PageLayout from '@/Layouts/PageLayout';
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
 import { router } from '@inertiajs/react'
