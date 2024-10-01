@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function PaginationData(props) {
+export default function PaginationData(props) {
     const { links, total, from, to, current_page, last_page } = props;
     const [currentPage, setCurrentPage] = useState(1);
 
