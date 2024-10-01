@@ -17,7 +17,7 @@ export default function PaginationData(props) {
     };
 
     return (
-        <nav aria-label="Page navigation example">
+        <nav>
 
             <span className="mx-4 text-sm text-gray-700 dark:text-gray-400">
                 Showing <span className="font-semibold text-gray-900 dark:text-white">{from}</span> to <span className="font-semibold text-gray-900 dark:text-white">{to}</span> of <span className="font-semibold text-gray-900 dark:text-white">{total}</span> Entries

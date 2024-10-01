@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import PageLayout from '@/Layouts/PageLayout';
 import { router } from '@inertiajs/react'
 import { TextInput, Button, Label, Table, Badge } from 'flowbite-react';
-import { PaginationData } from '@/Components/PaginationData';
+import PaginationData from '@/Components/PaginationData';
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
 
 export default function PasienEMRRawatJalan(props) {
