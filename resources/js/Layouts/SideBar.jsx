@@ -25,6 +25,11 @@ export default function SideBar() {
                     <Sidebar.Item icon={HiChartPie} href={route('RJ.PasienEMRUGD')}>EMR UGD Harian</Sidebar.Item>
                     {/* </Sidebar.Item> */}
 
+
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Sidebar.Item icon={HiChartPie} href={route('BPJS.ApiBpjsWSChecking')}>API BPJS Checking</Sidebar.Item>
+                    {/* </Sidebar.Item> */}
+
                     {/* <Sidebar.Item href={route('RJ.PasienRawatJalan')} icon={HiShoppingBag}>
                         Progress. . .
                     </Sidebar.Item>

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\RJ\PasienRawatJalanController;
 use App\Http\Controllers\UGD\PasienUGDController;
-
+use App\Http\Controllers\BPJS\ApiBpjsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +43,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::get('/RJ/PasienEMRUGD', [PasienUGDController::class, 'indexEMRUGD'])->name('RJ.PasienEMRUGD');
+
+
+
+    Route::get('/BPJS/ApiBpjsWSChecking', [ApiBpjsController::class, 'index'])->name('BPJS.ApiBpjsWSChecking');
+    Route::get('/BPJS/ref_poliklinik', [ApiBpjsController::class, 'ref_poliklinik'])->name('BPJS.ref_poliklinik');
 });
 
 Route::middleware('auth')->group(function () {
