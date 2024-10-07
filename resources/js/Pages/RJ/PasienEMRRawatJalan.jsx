@@ -251,9 +251,6 @@ export default function PasienEMRRawatJalan(props) {
 
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
 
-
-
-
                 <CrudTopBar date={date}></CrudTopBar>
 
                 <div className='h-[calc(100vh-180px)] overflow-auto'>

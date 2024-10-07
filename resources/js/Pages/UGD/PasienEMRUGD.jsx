@@ -2,27 +2,27 @@
 import { useState, useEffect } from 'react';
 
 import PageLayout from '@/Layouts/PageLayout';
-import { router } from '@inertiajs/react'
 import { TextInput, Button, Label, Table, Badge } from 'flowbite-react';
+import { useSelector } from 'react-redux';
+import CrudTopBar from '@/Components/CrudTopBar';
 import PaginationData from '@/Components/PaginationData';
+import { router } from '@inertiajs/react'
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
 
 export default function PasienEMRUGD(props) {
-    const { auth, dateUgdRef, queryPasienEMRUgd, queryPasienEmrUgdKelengkapanPengisianHarian } = props;
+    const { auth, date, queryPasienEMRUgd, queryPasienEmrUgdKelengkapanPengisianHarian } = props;
 
-    const [dateRef, setdateRef] = useState(dateUgdRef);
-    const [currentPageRef, setcurrentPageRef] = useState(1);
+    const [dateRef, setdateRef] = useState(date);
+
+
+    const selector = useSelector((state) => state.filter);
 
     useEffect(() => {
-
-        clearTimeout(window.dateRefTimeout);
-        window.dateRefTimeout = setTimeout(() => {
-            dateRef.trim() === "" || dateRef === null ?
-                router.get(route(route().current()), {}, { preserveState: true, replace: true, only: [] })
-                :
-                router.get(route(route().current()), { dateRef: dateRef }, { preserveState: true, replace: true, only: [] })
-        }, 300); // delay 300ms untuk live search
-    }, [dateRef, currentPageRef]);
+        clearTimeout(window.dateRefimeout);
+        window.dateRefimeout = setTimeout(() => {
+            router.get(route(route().current()), { date: selector.filter.date || date, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
+        }, 300);
+    }, []);
 
 
 
@@ -255,10 +255,7 @@ export default function PasienEMRUGD(props) {
 
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
 
-                <div className='grid grid-cols-12 mb-2'>
-                    <Label htmlFor="base" value="Base input" />
-                    <TextInput id="query" type="text" sizing="md" value={dateRef} onChange={(e) => setdateRef(e.target.value)} />
-                </div>
+                <CrudTopBar date={date}></CrudTopBar>
 
                 <div className='h-[calc(100vh-220px)] overflow-auto'>
                     <Table striped hoverable>
@@ -277,8 +274,8 @@ export default function PasienEMRUGD(props) {
                         </Table.Body>
                     </Table>
                 </div>
-                <div className='flex justify-end'>
-                    <PaginationData class="mt-6" links={queryPasienEMRUgd.links} />
+                <div className='sticky bottom-0 flex justify-end rounded-b-lg bg-gray-50'>
+                    <PaginationData class="mt-6" links={queryPasienEMRUgd.links} total={queryPasienEMRUgd.total} from={queryPasienEMRUgd.from} to={queryPasienEMRUgd.to} current_page={queryPasienEMRUgd.current_page} last_page={queryPasienEMRUgd.last_page} />
                 </div>
             </div>
 
