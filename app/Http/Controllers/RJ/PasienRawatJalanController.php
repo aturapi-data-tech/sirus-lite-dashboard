@@ -352,4 +352,100 @@ class PasienRawatJalanController extends Controller
         ];
         return $query;
     }
+
+
+    // EMR RJ
+    ///////////////////////////////////////////////////////
+    public function indexBookingMjkn(Request $request)
+    {
+        $month = $request->input('month') ? $request->input('month') : Carbon::now()->format('m/Y');
+
+
+
+
+        $queryBookingMjkn = $this->queryBookingMjkn($month);
+        $queryBookingMjknCheckin = $this->queryBookingMjknCheckin($month);
+        $queryBookingMjknBelum = $this->queryBookingMjknBelum($month);
+        $queryBookingMjknBatal = $this->queryBookingMjknBatal($month);
+
+
+
+
+        //return view
+        return inertia('RJ/BookingMJKN', [
+            'month' => $month,
+            'queryBookingMjkn' => $queryBookingMjkn,
+            'queryBookingMjknCheckin' => $queryBookingMjknCheckin,
+            'queryBookingMjknBelum' => $queryBookingMjknBelum,
+            'queryBookingMjknBatal' => $queryBookingMjknBatal,
+
+        ]);
+    }
+
+    public function queryBookingMjkn($monthRef): Collection
+    {
+
+        $query = DB::table('referensi_mobilejkn_bpjs')->select(
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd') AS tanggalperiksa1"),
+            DB::raw("count(*) AS jml_kunjungan")
+        )
+            ->where(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'mm/yyyy')"), '=', $monthRef)
+
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy')"))
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd')"))
+            ->orderBy('tanggalperiksa1',  'asc')
+            ->get();
+
+
+        return $query;
+    }
+
+    public function queryBookingMjknCheckin($monthRef): Collection
+    {
+        $query = DB::table('referensi_mobilejkn_bpjs')->select(
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd') AS tanggalperiksa1"),
+            DB::raw("count(*) AS jml_kunjungan")
+        )
+            ->where(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'mm/yyyy')"), '=', $monthRef)
+            ->where('status', '=', 'Checkin')
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy')"))
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd')"))
+            ->orderBy('tanggalperiksa1',  'asc')
+            ->get();
+        return $query;
+    }
+
+    public function queryBookingMjknBelum($monthRef): Collection
+    {
+        $query = DB::table('referensi_mobilejkn_bpjs')->select(
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd') AS tanggalperiksa1"),
+            DB::raw("count(*) AS jml_kunjungan")
+        )
+            ->where(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'mm/yyyy')"), '=', $monthRef)
+            ->where('status', '=', 'Belum')
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy')"))
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd')"))
+            ->orderBy('tanggalperiksa1',  'asc')
+            ->get();
+        return $query;
+    }
+
+    public function queryBookingMjknBatal($monthRef): Collection
+    {
+        $query = DB::table('referensi_mobilejkn_bpjs')->select(
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
+            DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd') AS tanggalperiksa1"),
+            DB::raw("count(*) AS jml_kunjungan")
+        )
+            ->where(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'mm/yyyy')"), '=', $monthRef)
+            ->where('status', '=', 'Batal')
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy')"))
+            ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd')"))
+            ->orderBy('tanggalperiksa1',  'asc')
+            ->get();
+        return $query;
+    }
 }
