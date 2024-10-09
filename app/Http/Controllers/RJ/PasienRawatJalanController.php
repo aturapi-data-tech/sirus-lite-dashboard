@@ -359,6 +359,8 @@ class PasienRawatJalanController extends Controller
     public function indexBookingMjkn(Request $request)
     {
         $month = $request->input('date') ? $request->input('date') : Carbon::now()->format('m/Y');
+        $show = $request->input('show') ? $request->input('show') : 10;
+
 
 
 
@@ -369,11 +371,12 @@ class PasienRawatJalanController extends Controller
         $queryBookingMjknBatal = $this->queryBookingMjknBatal($month);
 
 
-        $queryDataBookingMjkn = $this->queryDataBookingMjkn($month);
+        $queryDataBookingMjkn = $this->queryDataBookingMjkn($month, $show);
 
         //return view
         return inertia('RJ/BookingMJKN', [
             'date' => $month,
+            'show' => $show,
             'queryBookingMjkn' => $queryBookingMjkn,
             'queryBookingMjknCheckin' => $queryBookingMjknCheckin,
             'queryBookingMjknBelum' => $queryBookingMjknBelum,
