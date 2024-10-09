@@ -354,11 +354,11 @@ class PasienRawatJalanController extends Controller
     }
 
 
-    // EMR RJ
+    // MJKN RJ
     ///////////////////////////////////////////////////////
     public function indexBookingMjkn(Request $request)
     {
-        $month = $request->input('month') ? $request->input('month') : Carbon::now()->format('m/Y');
+        $month = $request->input('date') ? $request->input('date') : Carbon::now()->format('m/Y');
 
 
 
@@ -369,15 +369,16 @@ class PasienRawatJalanController extends Controller
         $queryBookingMjknBatal = $this->queryBookingMjknBatal($month);
 
 
-
+        $queryDataBookingMjkn = $this->queryDataBookingMjkn($month);
 
         //return view
         return inertia('RJ/BookingMJKN', [
-            'month' => $month,
+            'date' => $month,
             'queryBookingMjkn' => $queryBookingMjkn,
             'queryBookingMjknCheckin' => $queryBookingMjknCheckin,
             'queryBookingMjknBelum' => $queryBookingMjknBelum,
             'queryBookingMjknBatal' => $queryBookingMjknBatal,
+            'queryDataBookingMjkn' => $queryDataBookingMjkn
 
         ]);
     }
@@ -446,6 +447,51 @@ class PasienRawatJalanController extends Controller
             ->groupBy(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd')"))
             ->orderBy('tanggalperiksa1',  'asc')
             ->get();
+        return $query;
+    }
+
+    public function queryDataBookingMjkn($monthRef, $show = 10)
+    {
+
+        $query = DB::table('referensi_mobilejkn_bpjs')
+            ->select(
+                'nobooking',
+                'no_rawat',
+                'nomorkartu',
+                'nik',
+                'nohp',
+                'kodepoli',
+                DB::raw("(select poli_desc from rsmst_polis where kd_poli_bpjs=referensi_mobilejkn_bpjs.kodepoli)poli_desc"),
+                'pasienbaru',
+                'norm',
+                'kodedokter',
+                DB::raw("(select dr_name from rsmst_doctors where kd_dr_bpjs=referensi_mobilejkn_bpjs.kodedokter and rownum = 1)dr_name "),
+                DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') as tanggalperiksa"),
+                'jampraktek',
+                'jeniskunjungan',
+                'nomorreferensi',
+                'nomorantrean',
+                'angkaantrean',
+                'estimasidilayani',
+                'sisakuotajkn',
+                'kuotajkn',
+                'sisakuotanonjkn',
+                'kuotanonjkn',
+                'status',
+                'validasi',
+                'statuskirim',
+                'keterangan_batal',
+                'tanggalbooking',
+                'daftardariapp',
+                'reg_name',
+                'address',
+                DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'yyyymmdd') AS tanggalperiksa1"),
+            )
+            ->join('rsmst_pasiens', 'referensi_mobilejkn_bpjs.norm', 'rsmst_pasiens.reg_no')
+            ->where(DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'mm/yyyy')"), '=', $monthRef)
+            ->orderBy('tanggalperiksa1',  'asc')
+            ->paginate($show);
+
         return $query;
     }
 }

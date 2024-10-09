@@ -2,27 +2,23 @@ import PageLayout from '@/Layouts/PageLayout';
 import { Table, Badge } from 'flowbite-react';
 import PaginationData from '@/Components/PaginationData';
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { router } from '@inertiajs/react'
-import { TextInput } from 'flowbite-react';
-import { useState } from 'react';
-
+import CrudTopBar from '@/Components/CrudTopBar';
+import { setFilterDate } from '@/redux/slices/filterSlice';
 
 export default function PasienEMRRawatJalan(props) {
-    const { auth, month, queryBookingMjkn, queryBookingMjknCheckin, queryBookingMjknBelum, queryBookingMjknBatal } = props;
+    const { auth, date, queryBookingMjkn, queryBookingMjknCheckin, queryBookingMjknBelum, queryBookingMjknBatal, queryDataBookingMjkn } = props;
 
 
-    const [monthRef, setMonthRef] = useState(month);
-
+    const dispatch = useDispatch();
     const selector = useSelector((state) => state.filter);
 
     useEffect(() => {
-        clearTimeout(window.dateRefimeout);
-        window.dateRefimeout = setTimeout(() => {
-            router.get(route(route().current()), { month: monthRef }, { preserveState: true, replace: true, only: [] });
-        }, 300);
-    }, [monthRef]);
+        dispatch(setFilterDate(date));
+    }, []);
+
 
     function TableDataRow(props) {
         const {
@@ -30,161 +26,86 @@ export default function PasienEMRRawatJalan(props) {
             index
         } = props;
 
-        const datadaftar_json = JSON.parse(item?.datadaftarpolirj_json) || null;
-        const anamnesa = (datadaftar_json?.anamnesa) ? 1 : 0 || 0
-        const pemeriksaan = (datadaftar_json?.pemeriksaan) ? 1 : 0 || 0
-        const penilaian = (datadaftar_json?.penilaian) ? 1 : 0 || 0
-        const procedure = (datadaftar_json?.procedure) ? 1 : 0 || 0
-        const diagnosis = (datadaftar_json?.diagnosis) ? 1 : 0 || 0
-        const perencanaan = (datadaftar_json?.perencanaan) ? 1 : 0 || 0
-        const prosentaseEMR =
-            Math.floor(((anamnesa + pemeriksaan + penilaian + procedure + diagnosis + perencanaan) / 6) *
-                100);
-
-        const bgSelesaiPemeriksaan = (datadaftar_json?.perencanaan?.pengkajianMedis?.drPemeriksa) ? 'bg-green-100' : '' || ''
-        const badgecolorEmr = prosentaseEMR >= 80 ? 'success' : 'failure';
-
-        const badgecolorStatus = (item.rj_status === 'A'
-            ? 'warning'
-            : (item.rj_status === 'L'
-                ? 'success'
-                : (item.rj_status === 'I'
-                    ? 'info'
-                    : (item.rj_status === 'F'
-                        ? 'failure'
-                        : ''))))
-
-        const badgecolorKlaim =
-            item.klaim_id === 'UM'
-                ? 'dark'
-                : (item.klaim_id === 'JM'
-                    ? 'success'
-                    : (item.klaim_id === 'KR'
-                        ? 'indigo'
-                        : 'failure'));
-
-        const badgecolorAdministrasiRj = datadaftar_json?.AdministrasiRj ? 'success' : 'failure';
-
-        const badgecolorKeluhanUtama = datadaftar_json?.anamnesa?.keluhanUtama?.keluhanUtama ? 'success' : 'failure';
-        const badgecolorTTV = datadaftar_json?.pemeriksaan?.tandaVital?.suhu ? 'success' : 'failure';
-        const badgecolorTTDPerawat = datadaftar_json?.anamnesa?.pengkajianPerawatan?.perawatPenerima ? 'success' : 'failure';
-        const badgecolorPemeriksaan = datadaftar_json?.pemeriksaan?.tandaVital?.keadaanUmum ? 'success' : 'failure';
-        const badgecolorPenilaian = datadaftar_json?.penilaian ? 'success' : 'failure';
-        const badgecolorDiagnosisText = datadaftar_json?.diagnosisFreeText ? 'success' : 'failure';
-        const badgecolorDiagnosisICDX = datadaftar_json?.diagnosis?.length || 0 ? 'success' : 'failure';
-        const badgecolorTerapi = datadaftar_json?.perencanaan?.terapi?.terapi ? 'success' : 'failure';
-        const badgecolorEresep = datadaftar_json?.eresep ? 'success' : 'failure';
-
-        const badgecolorTTDDokter = datadaftar_json?.perencanaan?.pengkajianMedis?.drPemeriksa ? 'success' : 'failure';
-        const badgecolorTTDAdministrasi = badgecolorAdministrasiRj;
-        const badgecolorTelaahObat = datadaftar_json?.telaahResep ? 'success' : 'failure';
-        const badgecolorTelaahResep = datadaftar_json?.telaahObat ? 'success' : 'failure';
-        const badgecolorKirimSatuSehat = datadaftar_json?.satuSehatUuidRJ?.length ? 'success' : 'failure';
-        const badgecolorKirimDinkesTA = datadaftar_json?.satuDataKesehatanTulungagung ? 'success' : 'failure';
 
         return (
             <>
-                {/* <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${bgSelesaiPemeriksaan}`} key={'TableDataRow' + index} > */}
                 <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800`} key={'TableDataRow' + index} >
 
-                    <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
+                    <Table.Cell className="max-w-sm px-4 py-3 group-hover:bg-gray-100">
                         <div className="">
-                            {/* <div className="text-sm font-semibold text-gray-500 text-primary">
-                                Record ke <span className='text-3xl text-gray-900'>{index + 1}</span>
-                            </div> */}
-                            <div className="font-semibold text-primary">
-                                {item.reg_no}
+                            <div className="grid grid-cols-3 my-1 font-semibold text-primary">
+                                NoBooking
+                                {item.nobooking}
                             </div>
-                            <div className="font-semibold text-gray-900">
-                                {item.reg_name + ' / (' + item.sex + ')' + ' / ' + item.thn}
+                            <div className="grid grid-cols-1 text-lg font-semibold text-gray-900">
+                                {item.reg_name}
                             </div>
-                            <div className="font-normal text-gray-900">
+                            <div className="grid grid-cols-3 my-1 font-normal text-gray-900">
+                                IdBPJS
+                                {item.nomorkartu}
+                            </div>
+                            <div className="grid grid-cols-3 my-1 font-normal text-gray-900">
+                                NIK
+                                {item.nik}
+                            </div>
+                            <div className="grid grid-cols-1 font-normal text-gray-900">
                                 {item.address}
                             </div>
                         </div>
                     </Table.Cell>
-                    <Table.Cell>
+
+
+                    <Table.Cell className="max-w-sm px-4 py-3 group-hover:bg-gray-100">
                         <div className="">
                             <div className="font-semibold text-primary">
+                                {item.kodepoli} /
                                 {item.poli_desc}
+
                             </div>
                             <div className="font-semibold text-gray-900">
-                                {item.dr_name + ' / '}
-                                <Badge color={badgecolorKlaim}>
-                                    {item.klaim_id == 'UM'
-                                        ? 'UMUM'
-                                        : (item.klaim_id == 'JM'
-                                            ? 'BPJS'
-                                            : (item.klaim_id == 'KR'
-                                                ? 'Kronis'
-                                                : 'Asuransi Lain'))}
-                                </Badge>
-
+                                {item.kodedokter} /
+                                {item.dr_name}
                             </div>
                             <div className="font-normal text-gray-900">
-                                {'Nomer Pelayanan ' + item.no_antrian}
-                            </div>
-                            <div className="font-normal">
-                                {item.vno_sep}
-                            </div>
-                        </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                        <div>
-                            <div className="font-semibold text-primary">
-                                {item.rj_date + ' / Shift' + item.shift}
-                            </div>
-                            <div className="flex italic font-semibold text-gray-900">
-                                <Badge color={badgecolorStatus}>
-                                    {(item.rj_status === 'A'
-                                        ? 'Pelayanan '
-                                        : (item.rj_status === 'L'
-                                            ? 'Selesai Pelayanan '
-                                            : (item.rj_status === 'I'
-                                                ? 'Transfer Inap '
-                                                : (item.rj_status === 'F'
-                                                    ? 'Batal Transaksi '
-                                                    : ''))))
-                                    }
-                                </Badge>
-
-                                / Emr : <Badge color={badgecolorEmr}>{prosentaseEMR}%</Badge>
-                                {/* {anamnesa} + {pemeriksaan} + {penilaian} + {procedure} + {diagnosis} + {perencanaan} */}
-
+                                {'Nomer Pelayanan ' + item.nomorantrean}
                             </div>
                             <div className="font-normal text-gray-900">
-                                {'' + item.nobooking}
+                                {((('Jenis Kunjungan ' + item.jeniskunjungan == '1'
+                                    ? '1 (Rujukan FKTP)'
+                                    : item.jeniskunjungan == '2')
+                                    ? '2 (Rujukan Internal)'
+                                    : item.jeniskunjungan == '3')
+                                    ? '3 (Kontrol)'
+                                    : item.jeniskunjungan == '4')
+                                    ? '4 (Rujukan Antar RS)'
+                                    : 'Tidak ditemukan'}
                             </div>
-
-                            <div className="font-normal text-gray-700">
-                                <Badge color={badgecolorAdministrasiRj}>
-                                    Administrasi : {datadaftar_json?.AdministrasiRj?.userLog || ' ---'}
-                                </Badge>
+                            <div>
+                                NoReferensi
+                                {item.nomorreferensi}
                             </div>
-
                         </div>
                     </Table.Cell>
-                    <Table.Cell>
-                        <div className='grid justify-center w-full grid-cols-3 gap-1 rounded-lg'>
-                            <Badge color={badgecolorKeluhanUtama}>Keluhan Utama</Badge>
-                            <Badge color={badgecolorTTV}>TTV</Badge>
-                            <Badge color={badgecolorTTDPerawat}>TTD Perawat</Badge>
-                            <Badge color={badgecolorPemeriksaan}>Pemeriksaan</Badge>
-                            <Badge color={badgecolorPenilaian}>Penilaian</Badge>
-                            <Badge color={badgecolorDiagnosisText}>Diagnosis Text</Badge>
-                            <Badge color={badgecolorDiagnosisICDX}>Diagnosis ICDX</Badge>
-                            <Badge color={badgecolorTerapi}>Terapi</Badge>
-                            <Badge color={badgecolorEresep}>E-resep</Badge>
-                            <Badge color={badgecolorTTDDokter}>TTD Dokter</Badge>
-                            <Badge color={badgecolorTTDAdministrasi}>TTD Administrasi</Badge>
-                            <Badge color={badgecolorTelaahObat}>Telaah Obat</Badge>
-                            <Badge color={badgecolorTelaahResep}>Telaah Resep</Badge>
-                            <Badge color={badgecolorKirimSatuSehat}>Kirim Satu Sehat</Badge>
-                            <Badge color={badgecolorKirimDinkesTA}>Kirim DinkesTA</Badge>
 
+                    <Table.Cell className="max-w-sm px-4 py-3 group-hover:bg-gray-100">
+                        <div className="">
+                            <div className="grid grid-flow-row gap-1 italic font-semibold text-gray-900">
+                                Booking {item.tanggalbooking}
+                                <br />
+                                Tgl Periksa {item.tanggalperiksa}
+                                <br />
+                                {item.status}
+                                <br />
+                                {item.keterangan_batal}
+                            </div>
+                            <div className="font-normal text-gray-900">
+                                {item.daftardariapp}
+                            </div>
                         </div>
                     </Table.Cell>
-                    <Table.Cell>
+
+                    <Table.Cell className="max-w-sm px-4 py-3 group-hover:bg-gray-100 group-hover:text-primary">
                         {item.reg_name}
                     </Table.Cell>
 
@@ -205,7 +126,13 @@ export default function PasienEMRRawatJalan(props) {
         const queryBookingMjknBelumProses = [];
         const queryBookingMjknBatalProses = [];
 
-        for (let i = 1; i <= 31; i++) {
+        const [month, year] = monthRef.split('/')
+        function getLastDayOfMonth(year, month) {
+            const date = new Date(year, month + 1, 0); // Set the day to 0 to get the last day of the previous month
+            return date.getDate();
+        }
+
+        for (let i = 1; i <= getLastDayOfMonth(year, month); i++) {
 
             const monthRefFori = i.toString().padStart(2, '0') + '/' + monthRef;
             const originalDate = monthRefFori;
@@ -236,11 +163,11 @@ export default function PasienEMRRawatJalan(props) {
         const jmlKunjunganCheckin = queryBookingMjknCheckinProses.map(item => item.jml_kunjungan);
         const jmlKunjunganDescCheckin = queryBookingMjknCheckinProses.map(item => item.tanggalperiksa);
 
-        // const jmlKunjunganBelum = queryBookingMjknBelumProses.map(item => item.jml_kunjungan);
-        // const jmlKunjunganDescBelum = queryBookingMjknBelumProses.map(item => item.tanggalperiksa);
+        const jmlKunjunganBelum = queryBookingMjknBelumProses.map(item => item.jml_kunjungan);
+        const jmlKunjunganDescBelum = queryBookingMjknBelumProses.map(item => item.tanggalperiksa);
 
-        // const jmlKunjunganBatal = queryBookingMjknBatalProses.map(item => item.jml_kunjungan);
-        // const jmlKunjunganDescBatal = queryBookingMjknBatalProses.map(item => item.tanggalperiksa);
+        const jmlKunjunganBatal = queryBookingMjknBatalProses.map(item => item.jml_kunjungan);
+        const jmlKunjunganDescBatal = queryBookingMjknBatalProses.map(item => item.tanggalperiksa);
 
 
         return (
@@ -256,15 +183,15 @@ export default function PasienEMRRawatJalan(props) {
                             name: 'Checkin'
                         }
                         ,
-                        // {
-                        //     data: jmlKunjunganBelum,
-                        //     name: 'Belum'
-                        // }
-                        // ,
-                        // {
-                        //     data: jmlKunjunganBatal,
-                        //     name: 'Batal'
-                        // }
+                        {
+                            data: jmlKunjunganBelum,
+                            name: 'Belum'
+                        }
+                        ,
+                        {
+                            data: jmlKunjunganBatal,
+                            name: 'Batal'
+                        }
 
                     ]}
                         myChartTitle={'Pendaftaran MJKN Bulan  ' + monthRef} />
@@ -281,10 +208,6 @@ export default function PasienEMRRawatJalan(props) {
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
 
 
-                <div>
-                    <TextInput id="Bulan" type="text" sizing="md" className='w-32' value={monthRef} onChange={(e) => setMonthRef(e.target.value)} />
-                </div>
-
                 <div className='h-[calc(100vh-180px)] overflow-auto'>
                     <div className='my-2'>
                         <ChartMJKN
@@ -292,8 +215,44 @@ export default function PasienEMRRawatJalan(props) {
                             queryBookingMjknCheckin={queryBookingMjknCheckin}
                             queryBookingMjknBelum={queryBookingMjknBelum}
                             queryBookingMjknBatal={queryBookingMjknBatal}
-                            monthRef={monthRef} />
+                            monthRef={selector.filter.date} />
                     </div>
+
+
+
+
+
+                    <CrudTopBar date={selector.filter.date}></CrudTopBar>
+
+                    <div className='h-[calc(100vh-180px)] overflow-auto'>
+                        <Table striped hoverable>
+                            <Table.Head className='sticky top-0'>
+                                <Table.HeadCell>
+                                    Pasien
+                                </Table.HeadCell>
+                                <Table.HeadCell>
+                                    Poli
+                                </Table.HeadCell>
+                                <Table.HeadCell>
+                                    Status Layanan
+                                </Table.HeadCell>
+                                <Table.HeadCell>
+                                    Action
+                                </Table.HeadCell>
+
+                            </Table.Head>
+                            <Table.Body className="divide-y">
+                                {queryDataBookingMjkn.data.map((item, index) => (
+                                    <TableDataRow item={item} index={index} key={index} />
+                                ))}
+                            </Table.Body>
+                        </Table>
+
+                        <div className='sticky bottom-0 flex justify-end rounded-b-lg bg-gray-50'>
+                            <PaginationData className="mt-6" links={queryDataBookingMjkn.links} total={queryDataBookingMjkn.total} from={queryDataBookingMjkn.from} to={queryDataBookingMjkn.to} current_page={queryDataBookingMjkn.current_page} last_page={queryDataBookingMjkn.last_page} />
+                        </div>
+                    </div>
+
 
 
                 </div>
