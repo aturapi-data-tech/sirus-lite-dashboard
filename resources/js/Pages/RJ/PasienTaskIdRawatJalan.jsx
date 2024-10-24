@@ -31,14 +31,14 @@ export default function PasienEMRRawatJalan(props) {
 
         if (status) {
             icon = (
-                <svg class="w-8 h-8 text-green-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd" />
+                <svg className="w-8 h-8 text-green-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clipRule="evenodd" />
                 </svg>
             );
         } else {
             icon = (
-                <svg class="w-8 h-8 text-red-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z" clip-rule="evenodd" />
+                <svg className="w-8 h-8 text-red-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z" clipRule="evenodd" />
                 </svg>
             );
         }
@@ -237,19 +237,17 @@ export default function PasienEMRRawatJalan(props) {
         const taskId6 = datadaftar_json?.taskIdPelayanan?.taskId6 || '00/00/0000 00:00:00';
         const taskId7 = datadaftar_json?.taskIdPelayanan?.taskId7 || '00/00/0000 00:00:00';
 
-        const taskIdStatus = (taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7) => {
-            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00' && taskId6 !== '00/00/0000 00:00:00' && taskId7 !== '00/00/0000 00:00:00') return true;
-            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') return true;
-            if (taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') return true;
+        const taskIdStatus = () => {
+            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00' && taskId6 !== '00/00/0000 00:00:00' && taskId7 !== '00/00/0000 00:00:00') { return true; }
+            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') { return true; }
+            if (taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') { return true; }
             return false;
         }
 
-        console.log(taskId7, taskIdStatus);
+        console.log(taskId7, taskIdStatus());
         return (
             <>
-                {/* <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${bgSelesaiPemeriksaan}`} key={'TableDataRow' + index} > */}
                 <Table.Row className={` dark:border-gray-700 dark:bg-gray-800 ${taskIdStatus() ? 'bg-white' : 'bg-red-100'}`} key={'TableDataRow' + index} >
-
                     <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="">
                             {/* <div className="text-sm font-semibold text-gray-500 text-primary">
