@@ -26,7 +26,6 @@ export default function PasienEMRRawatJalan(props) {
 
     function TaskIdStatus(props) {
         const { status } = props;
-        console.log(status);
         let icon;
 
         if (status) {
@@ -244,14 +243,20 @@ export default function PasienEMRRawatJalan(props) {
                 && taskId5 !== '00/00/0000 00:00:00'
                 && taskId6 !== '00/00/0000 00:00:00'
                 && taskId7 !== '00/00/0000 00:00:00') { return 1; }
-            else if (taskId1 !== '00/00/0000 00:00:00'
-                && taskId2 !== '00/00/0000 00:00:00'
+            else if (taskId1 === '00/00/0000 00:00:00'
+                && taskId2 === '00/00/0000 00:00:00'
                 && taskId3 !== '00/00/0000 00:00:00'
                 && taskId4 !== '00/00/0000 00:00:00'
-                && taskId5 !== '00/00/0000 00:00:00') { return 2; }
-            else if (taskId3 !== '00/00/0000 00:00:00'
+                && taskId5 !== '00/00/0000 00:00:00'
+                && taskId6 === '00/00/0000 00:00:00'
+                && taskId7 === '00/00/0000 00:00:00') { return 2; }
+            else if (taskId1 === '00/00/0000 00:00:00'
+                && taskId2 === '00/00/0000 00:00:00'
+                && taskId3 !== '00/00/0000 00:00:00'
                 && taskId4 !== '00/00/0000 00:00:00'
-                && taskId5 !== '00/00/0000 00:00:00') { return 3; }
+                && taskId5 !== '00/00/0000 00:00:00'
+                && taskId6 !== '00/00/0000 00:00:00'
+                && taskId7 !== '00/00/0000 00:00:00') { return 3; }
             else {
                 return 0;
             }
@@ -337,7 +342,6 @@ export default function PasienEMRRawatJalan(props) {
                         </div>
                     </Table.Cell>
                     <Table.Cell>
-                        <div>{taskId7}{'zzz'}{taskIdStatus()}</div>
                         <TaskId
                             taskId1={taskId1}
                             taskId2={taskId2}
