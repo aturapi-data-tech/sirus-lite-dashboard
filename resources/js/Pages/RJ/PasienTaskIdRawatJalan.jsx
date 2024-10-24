@@ -335,7 +335,7 @@ export default function PasienEMRRawatJalan(props) {
                         </div>
                     </Table.Cell>
                     <Table.Cell>
-                        <div>{taskId7}{'zzz'}{taskIdStatus() ? 'true' : 'false'}</div>
+                        <div>{taskId7}{'zzz'}{taskIdStatus()}</div>
                         <TaskId
                             taskId1={taskId1}
                             taskId2={taskId2}
