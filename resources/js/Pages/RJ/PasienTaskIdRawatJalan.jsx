@@ -25,11 +25,11 @@ export default function PasienEMRRawatJalan(props) {
 
 
     function TaskIdStatus(props) {
-        const { status } = props;
+        const { taskIdStatus } = props;
 
         let icon;
 
-        if (status) {
+        if (taskIdStatus) {
             icon = (
                 <svg className="w-8 h-8 text-green-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clipRule="evenodd" />
@@ -244,7 +244,6 @@ export default function PasienEMRRawatJalan(props) {
             return false;
         }
 
-        console.log(taskId7, taskIdStatus());
         return (
             <>
                 <Table.Row className={` dark:border-gray-700 dark:bg-gray-800 ${taskIdStatus() ? 'bg-white' : 'bg-red-100'}`} key={'TableDataRow' + index} >
@@ -333,7 +332,7 @@ export default function PasienEMRRawatJalan(props) {
                             taskId5={taskId5}
                             taskId6={taskId6}
                             taskId7={taskId7}
-                            taskIdStatus={taskIdStatus()}
+                            taskIdStatus={taskIdStatus}
                         ></TaskId>
                     </Table.Cell>
                 </Table.Row >
