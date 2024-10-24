@@ -238,7 +238,7 @@ export default function PasienEMRRawatJalan(props) {
         const taskId7 = datadaftar_json?.taskIdPelayanan?.taskId7 || '00/00/0000 00:00:00';
 
         const taskIdStatus = () => {
-            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00' && taskId6 !== '00/00/0000 00:00:00' && taskId7 !== '00/00/0000 00:00:00') return true;
+            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00' && taskId6 !== '00/00/0000 00:00:00' && taskId7 !== '00/00/0000 00:00:00') console.log(taskId7); return true;
             if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') return true;
             if (taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') return true;
             return false;
