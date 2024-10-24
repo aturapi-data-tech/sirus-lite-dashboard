@@ -497,4 +497,28 @@ class PasienRawatJalanController extends Controller
 
         return $query;
     }
+
+
+    // TaskId RJ
+    ///////////////////////////////////////////////////////
+    public function indexTaskIdRJ(Request $request)
+    {
+        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
+        $page = $request->input('page') ? $request->input('page') : 1;
+        $show = $request->input('show') ? $request->input('show') : 10;
+
+
+
+        $queryPasienEMRRJ = $this->queryPasienEmrRJ($date, $show);
+        $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($date);
+
+        //return view
+        return inertia('RJ/PasienTaskIdRawatJalan', [
+            'date' => $date,
+            'page' => $page,
+            'show' => $show,
+            'queryPasienEMRRJ' => $queryPasienEMRRJ,
+            'queryPasienEmrRJKelengkapanPengisianHarian' => $queryPasienEmrRJKelengkapanPengisianHarian
+        ]);
+    }
 }

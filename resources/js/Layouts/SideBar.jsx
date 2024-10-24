@@ -22,6 +22,10 @@ export default function SideBar() {
                     {/* </Sidebar.Item> */}
 
                     {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Sidebar.Item icon={HiChartPie} href={route('RJ.PasienTaskIdRawatJalan')}>TaskId RJ Harian</Sidebar.Item>
+                    {/* </Sidebar.Item> */}
+
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
                     <Sidebar.Item icon={HiChartPie} href={route('RJ.PasienEMRUGD')}>EMR UGD Harian</Sidebar.Item>
                     {/* </Sidebar.Item> */}
 
