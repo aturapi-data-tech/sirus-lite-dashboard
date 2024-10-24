@@ -333,7 +333,7 @@ export default function PasienEMRRawatJalan(props) {
                             taskId5={taskId5}
                             taskId6={taskId6}
                             taskId7={taskId7}
-                            taskIdStatus={taskIdStatus}
+                            taskIdStatus={taskIdStatus()}
                         ></TaskId>
                     </Table.Cell>
                 </Table.Row >
