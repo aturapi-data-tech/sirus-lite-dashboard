@@ -25,11 +25,11 @@ export default function PasienEMRRawatJalan(props) {
 
 
     function TaskIdStatus(props) {
-        const { taskIdStatus } = props;
+        const { status } = props;
 
         let icon;
 
-        if (taskIdStatus) {
+        if (status) {
             icon = (
                 <svg className="w-8 h-8 text-green-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clipRule="evenodd" />
@@ -51,8 +51,7 @@ export default function PasienEMRRawatJalan(props) {
     }
 
     function TaskId(props) {
-        const { taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7, taskIdStatus } = props;
-
+        const { taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7, status } = props;
         const bgtaskId1 = taskId1 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
         const bgtaskId2 = taskId2 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
         const bgtaskId3 = taskId3 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
@@ -171,7 +170,7 @@ export default function PasienEMRRawatJalan(props) {
                         </div>
                     </li >
 
-                    <TaskIdStatus status={taskIdStatus}></TaskIdStatus>
+                    <TaskIdStatus status={status}></TaskIdStatus>
 
                 </ol >
                 <div className='grid grid-cols-3 gap-2 mt-2 text-center text-gray-900'>
@@ -332,7 +331,7 @@ export default function PasienEMRRawatJalan(props) {
                             taskId5={taskId5}
                             taskId6={taskId6}
                             taskId7={taskId7}
-                            taskIdStatus={taskIdStatus}
+                            status={taskIdStatus()}
                         ></TaskId>
                     </Table.Cell>
                 </Table.Row >
