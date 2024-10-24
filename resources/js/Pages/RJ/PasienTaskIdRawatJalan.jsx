@@ -243,16 +243,18 @@ export default function PasienEMRRawatJalan(props) {
                 && taskId4 !== '00/00/0000 00:00:00'
                 && taskId5 !== '00/00/0000 00:00:00'
                 && taskId6 !== '00/00/0000 00:00:00'
-                && taskId7 !== '00/00/0000 00:00:00') { return '1'; }
-            if (taskId1 !== '00/00/0000 00:00:00'
+                && taskId7 !== '00/00/0000 00:00:00') { return true; }
+            else if (taskId1 !== '00/00/0000 00:00:00'
                 && taskId2 !== '00/00/0000 00:00:00'
                 && taskId3 !== '00/00/0000 00:00:00'
                 && taskId4 !== '00/00/0000 00:00:00'
-                && taskId5 !== '00/00/0000 00:00:00') { return '2'; }
-            if (taskId3 !== '00/00/0000 00:00:00'
+                && taskId5 !== '00/00/0000 00:00:00') { return true; }
+            else if (taskId3 !== '00/00/0000 00:00:00'
                 && taskId4 !== '00/00/0000 00:00:00'
-                && taskId5 !== '00/00/0000 00:00:00') { return '3'; }
-            return false;
+                && taskId5 !== '00/00/0000 00:00:00') { return true; }
+            else {
+                return false;
+            }
         }
 
         return (
