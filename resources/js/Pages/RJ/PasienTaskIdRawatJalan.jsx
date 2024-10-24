@@ -26,7 +26,7 @@ export default function PasienEMRRawatJalan(props) {
 
     function TaskIdStatus(props) {
         const { status } = props;
-
+        console.log(status);
         let icon;
 
         if (status) {
