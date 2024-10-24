@@ -24,20 +24,48 @@ export default function PasienEMRRawatJalan(props) {
     }, []);
 
 
-    function TaskId(props) {
-        const { taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7 } = props;
+    function TaskIdStatus(props) {
+        const { status } = props;
 
-        const bgtaskId1 = taskId1 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
-        const bgtaskId2 = taskId2 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
-        const bgtaskId3 = taskId3 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
-        const bgtaskId4 = taskId4 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
-        const bgtaskId5 = taskId5 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
-        const bgtaskId6 = taskId6 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
-        const bgtaskId7 = taskId7 !== 'xx/xx/xxxx xx:xx:xx' ? 'bg-green-200' : 'bg-gray-100';
+        let icon;
+
+        if (status) {
+            icon = (
+                <svg class="w-8 h-8 text-green-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd" />
+                </svg>
+            );
+        } else {
+            icon = (
+                <svg class="w-8 h-8 text-red-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z" clip-rule="evenodd" />
+                </svg>
+            );
+        }
 
         return (
             <>
-                <ol className="items-center sm:flex">
+                {icon}
+            </>
+        );
+    }
+
+    function TaskId(props) {
+        const { taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7, taskIdStatus } = props;
+
+        const bgtaskId1 = taskId1 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+        const bgtaskId2 = taskId2 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+        const bgtaskId3 = taskId3 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+        const bgtaskId4 = taskId4 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+        const bgtaskId5 = taskId5 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+        const bgtaskId6 = taskId6 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+        const bgtaskId7 = taskId7 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
+
+
+
+        return (
+            <>
+                <ol className="items-center text-center sm:flex">
                     <li className="relative mb-6 sm:mb-0">
                         <div className="flex items-center">
                             <div className={`z-10 flex items-center justify-center w-6 h-6 ${bgtaskId1} rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0`}>
@@ -47,8 +75,8 @@ export default function PasienEMRRawatJalan(props) {
                             </div>
                             <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId1</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId1} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId1</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId1}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Masuk Admisi</p>
                         </div>
@@ -62,8 +90,8 @@ export default function PasienEMRRawatJalan(props) {
                             </div>
                             <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId2</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId2} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId2</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId2}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Selesai Admisi</p>
                         </div>
@@ -77,8 +105,8 @@ export default function PasienEMRRawatJalan(props) {
                             </div>
                             <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId3</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId3} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId3</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId3}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Daftar Poli</p>
                         </div>
@@ -92,8 +120,8 @@ export default function PasienEMRRawatJalan(props) {
                             </div>
                             <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId4</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId4} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId4</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId4}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Masuk Poli</p>
                         </div>
@@ -107,8 +135,8 @@ export default function PasienEMRRawatJalan(props) {
                             </div>
                             <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId5</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId5} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId5</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId5}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Keluar Poli</p>
                         </div>
@@ -122,8 +150,8 @@ export default function PasienEMRRawatJalan(props) {
                             </div>
                             <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId6</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId6} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId6</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId6}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Masuk Apotek</p>
                         </div>
@@ -136,13 +164,27 @@ export default function PasienEMRRawatJalan(props) {
                                 </svg>
                             </div>
                         </div>
-                        <div className="mt-3 sm:pe-8">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">TaskId7</h3>
+                        <div className={`mt-3 sm:pe-0 ${bgtaskId7} rounded-lg mx-1`}>
+                            <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId7</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId7}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Keluar Apotek</p>
                         </div>
                     </li >
+
+                    <TaskIdStatus status={taskIdStatus}></TaskIdStatus>
+
                 </ol >
+                <div className='grid grid-cols-3 gap-2 mt-2 text-center text-gray-900'>
+                    <p>
+                        Waktu Tunggu Polli : {'xxxx'}
+                    </p>
+                    <p>
+                        Waktu Layanan Polli : {'xxxx'}
+                    </p>
+                    <p>
+                        Waktu Layanan Apotek : {'xxxx'}
+                    </p>
+                </div>
             </>
         );
     }
@@ -187,21 +229,25 @@ export default function PasienEMRRawatJalan(props) {
 
         const badgecolorAdministrasiRj = datadaftar_json?.AdministrasiRj ? 'success' : 'failure';
 
-        const taskId1 = datadaftar_json?.taskIdPelayanan?.taskId1 || 'xx/xx/xxxx xx:xx:xx';
-        const taskId2 = datadaftar_json?.taskIdPelayanan?.taskId2 || 'xx/xx/xxxx xx:xx:xx';
-        const taskId3 = datadaftar_json?.taskIdPelayanan?.taskId3 || 'xx/xx/xxxx xx:xx:xx';
-        const taskId4 = datadaftar_json?.taskIdPelayanan?.taskId4 || 'xx/xx/xxxx xx:xx:xx';
-        const taskId5 = datadaftar_json?.taskIdPelayanan?.taskId5 || 'xx/xx/xxxx xx:xx:xx';
-        const taskId6 = datadaftar_json?.taskIdPelayanan?.taskId6 || 'xx/xx/xxxx xx:xx:xx';
-        const taskId7 = datadaftar_json?.taskIdPelayanan?.taskId7 || 'xx/xx/xxxx xx:xx:xx';
+        const taskId1 = datadaftar_json?.taskIdPelayanan?.taskId1 || '00/00/0000 00:00:00';
+        const taskId2 = datadaftar_json?.taskIdPelayanan?.taskId2 || '00/00/0000 00:00:00';
+        const taskId3 = datadaftar_json?.taskIdPelayanan?.taskId3 || '00/00/0000 00:00:00';
+        const taskId4 = datadaftar_json?.taskIdPelayanan?.taskId4 || '00/00/0000 00:00:00';
+        const taskId5 = datadaftar_json?.taskIdPelayanan?.taskId5 || '00/00/0000 00:00:00';
+        const taskId6 = datadaftar_json?.taskIdPelayanan?.taskId6 || '00/00/0000 00:00:00';
+        const taskId7 = datadaftar_json?.taskIdPelayanan?.taskId7 || '00/00/0000 00:00:00';
 
-
-
+        const taskIdStatus = () => {
+            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00' && taskId6 !== '00/00/0000 00:00:00' && taskId7 !== '00/00/0000 00:00:00') return true;
+            if (taskId1 !== '00/00/0000 00:00:00' && taskId2 !== '00/00/0000 00:00:00' && taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') return true;
+            if (taskId3 !== '00/00/0000 00:00:00' && taskId4 !== '00/00/0000 00:00:00' && taskId5 !== '00/00/0000 00:00:00') return true;
+            return false;
+        }
 
         return (
             <>
                 {/* <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${bgSelesaiPemeriksaan}`} key={'TableDataRow' + index} > */}
-                <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800`} key={'TableDataRow' + index} >
+                <Table.Row className={` dark:border-gray-700 dark:bg-gray-800 ${taskIdStatus() ? 'bg-white' : 'bg-red-100'}`} key={'TableDataRow' + index} >
 
                     <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="">
@@ -288,6 +334,7 @@ export default function PasienEMRRawatJalan(props) {
                             taskId5={taskId5}
                             taskId6={taskId6}
                             taskId7={taskId7}
+                            taskIdStatus={taskIdStatus}
                         ></TaskId>
                     </Table.Cell>
                 </Table.Row >
@@ -296,10 +343,49 @@ export default function PasienEMRRawatJalan(props) {
     }
 
 
+    function ChartUmumBpjs(props) {
+        const { dateRef, data } = props;
 
+        const TaskIdLengkap = [data.queryTotal];
+        const TaskIdLengkapDesc = 'Lengkap';
+
+        const TaskIdTidakLengkap = [data.queryLengkap];
+        const TaskIdTidakLengkapDesc = 'Tidak Lengkap';
+
+
+        const rjDate = [dateRef];
+
+
+        return (
+            <div className='bg-white border border-gray-200 rounded-lg shadow-sm'>
+                <div className='grid grid-cols-2 mx-2 '>
+                    <MyApexCharts myType={'bar'} myWidth={'100%'} myCategories={rjDate} myData={[
+                        {
+                            data: TaskIdLengkap,
+                            name: TaskIdLengkapDesc
+                        },
+                        {
+                            data: TaskIdTidakLengkap,
+                            name: TaskIdTidakLengkapDesc
+                        }
+                    ]}
+                        myChartTitle={'Task Id ' + rjDate} />
+
+
+
+                </div>
+            </div>
+        )
+    }
 
     return (
         <PageLayout user={auth.user}>
+
+            <div className='mb-4'>
+                <ChartUmumBpjs
+                    data={queryPasienEmrRJKelengkapanPengisianHarian}
+                    dateRef={selector.filter.date} />
+            </div>
 
 
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
@@ -307,7 +393,7 @@ export default function PasienEMRRawatJalan(props) {
                 <CrudTopBar date={date}></CrudTopBar>
 
                 <div className='h-[calc(100vh-180px)] overflow-auto'>
-                    <Table striped hoverable>
+                    <Table hoverable>
                         <Table.Head className='sticky top-0'>
                             <Table.HeadCell>Pasien</Table.HeadCell>
                             <Table.HeadCell>Poli</Table.HeadCell>
