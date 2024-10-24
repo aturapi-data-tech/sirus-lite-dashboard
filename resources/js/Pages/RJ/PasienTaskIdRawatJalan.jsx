@@ -244,6 +244,7 @@ export default function PasienEMRRawatJalan(props) {
             return false;
         }
 
+        console.log(taskId7, taskIdStatus);
         return (
             <>
                 {/* <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${bgSelesaiPemeriksaan}`} key={'TableDataRow' + index} > */}
