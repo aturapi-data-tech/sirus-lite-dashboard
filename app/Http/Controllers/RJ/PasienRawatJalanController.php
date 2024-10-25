@@ -506,8 +506,7 @@ class PasienRawatJalanController extends Controller
     ///////////////////////////////////////////////////////
     public function indexTaskIdRJ(Request $request)
     {
-        // $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
-        $date = '23/10/2024';
+        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
         $page = $request->input('page') ? $request->input('page') : 1;
         $show = $request->input('show') ? $request->input('show') : 10;
 
