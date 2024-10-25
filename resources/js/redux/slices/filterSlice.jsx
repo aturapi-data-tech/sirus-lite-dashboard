@@ -4,7 +4,7 @@ const filterSlice = createSlice({
     name: "filter",
     initialState: {
         filter: {
-            find: "all",
+            find: "",
             date: "",
             show: 10,
             page: 1,

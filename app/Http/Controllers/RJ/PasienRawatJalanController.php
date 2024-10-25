@@ -509,6 +509,8 @@ class PasienRawatJalanController extends Controller
         $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
         $page = $request->input('page') ? $request->input('page') : 1;
         $show = $request->input('show') ? $request->input('show') : 10;
+        $find = $request->input('find') ? $request->input('find') : '';
+
 
         $queryPasienEMRRJ = $this->queryPasienEmrRJ($date, $show);
 
