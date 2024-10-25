@@ -20,10 +20,7 @@ export default function ShowData() {
         dispatch(setFilterShow(showNumber));
         clearTimeout(window.showRefimeout);
         window.showRefimeout = setTimeout(() => {
-            selector.filter.date.trim() === "" || selector.filter.date === null ?
-                router.get(route(route().current()), {}, { preserveState: true, replace: true, only: [] })
-                :
-                router.get(route(route().current()), { date: selector.filter.date, page: selector.filter.page, show: showNumber }, { preserveState: true, replace: true, only: [] })
+            router.get(route(route().current()), { date: selector.filter.date, page: selector.filter.page, show: showNumber }, { preserveState: true, replace: true, only: [] })
         }, 300);
     };
 
