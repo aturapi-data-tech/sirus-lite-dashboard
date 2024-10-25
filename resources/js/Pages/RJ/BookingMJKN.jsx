@@ -21,7 +21,7 @@ export default function PasienEMRRawatJalan(props) {
         window.dateRefimeout = setTimeout(() => {
             router.get(route(route().current()), { date: selector.filter.date || date, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
         }, 300);
-    }, [dispatch, date, selector.filter.date, selector.filter.page, selector.filter.show]);
+    }, []);
 
 
     function TableDataRow(props) {

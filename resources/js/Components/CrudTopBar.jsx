@@ -7,8 +7,7 @@ import { setFilterDate, setFilterPage } from '@/redux/slices/filterSlice';
 import { useEffect } from 'react';
 
 export default function CrudTopBar(props) {
-    const { date = '' } = props;
-
+    const { date } = props;
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.filter);
 
@@ -24,11 +23,13 @@ export default function CrudTopBar(props) {
 
 
     useEffect(() => {
+        dispatch(setFilterDate(date));
+
         // RESET PAGE ketika date dan page berubah
         if (selector.filter.date || selector.filter.page) {
             dispatch(setFilterPage(1));
         }
-    })
+    }, []);
 
 
 
@@ -39,7 +40,7 @@ export default function CrudTopBar(props) {
             <div className='flex justify-between gap-x-2'>
 
                 <div>
-                    <TextInput id="Tanggal" type="text" sizing="md" className='w-32' value={selector.filter.date || date} onChange={handleDateChange} />
+                    <TextInput id="Tanggal" type="text" sizing="md" className='w-32' value={selector.filter.date} onChange={handleDateChange} />
                 </div>
                 <div className=''>
                     <TextInput id="search"

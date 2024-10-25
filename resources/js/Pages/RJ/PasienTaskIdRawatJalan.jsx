@@ -2,12 +2,11 @@ import PageLayout from '@/Layouts/PageLayout';
 import { Table, Badge } from 'flowbite-react';
 import PaginationData from '@/Components/PaginationData';
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import CrudTopBar from '@/Components/CrudTopBar';
 import { useEffect } from 'react';
 import { router } from '@inertiajs/react'
 import moment from 'moment';
-import { setFilterDate } from '@/redux/slices/filterSlice';
 
 
 export default function PasienEMRRawatJalan(props) {
@@ -15,20 +14,17 @@ export default function PasienEMRRawatJalan(props) {
 
 
 
-    const dispatch = useDispatch();
 
     const selector = useSelector((state) => state.filter);
 
 
 
     useEffect(() => {
-        dispatch(setFilterDate(date));
-
         clearTimeout(window.dateRefimeout);
         window.dateRefimeout = setTimeout(() => {
             router.get(route(route().current()), { date: selector.filter.date || date, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
         }, 300);
-    }, [dispatch, date, selector.filter.date, selector.filter.page, selector.filter.show]);
+    }, []);
 
 
     function TaskIdStatus(props) {
@@ -235,12 +231,15 @@ export default function PasienEMRRawatJalan(props) {
                     <TaskIdStatus status={status}></TaskIdStatus>
 
                 </ol >
-                <div className='grid grid-cols-3 gap-2 mt-2 text-center text-gray-900'>
+                <div className='grid grid-cols-4 gap-2 mt-2 text-center text-gray-900'>
                     <p>
-                        Waktu Tunggu Polli : {waktuTungguPoli()} menit
+                        Waktu Admisi : {'xxxxxx'} menit
                     </p>
                     <p>
-                        Waktu Layanan Polli : {waktuLayananPoli()} menit
+                        Waktu Tunggu Poli : {waktuTungguPoli()} menit
+                    </p>
+                    <p>
+                        Waktu Layanan Poli : {waktuLayananPoli()} menit
                     </p>
                     <p>
                         Waktu Layanan Apotek : {waktuLayananApotek()} menit
