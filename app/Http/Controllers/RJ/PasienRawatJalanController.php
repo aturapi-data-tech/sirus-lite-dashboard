@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use carbon\Carbon;
+use App\Http\Traits\BPJS\AntrianBPJSTrait;
 
 class PasienRawatJalanController extends Controller
 {
+    use AntrianBPJSTrait;
+
     public function index(Request $request)
     {
 
@@ -503,13 +506,47 @@ class PasienRawatJalanController extends Controller
     ///////////////////////////////////////////////////////
     public function indexTaskIdRJ(Request $request)
     {
-        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
+        // $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
+        $date = '23/10/2024';
         $page = $request->input('page') ? $request->input('page') : 1;
         $show = $request->input('show') ? $request->input('show') : 10;
 
-
-
         $queryPasienEMRRJ = $this->queryPasienEmrRJ($date, $show);
+
+        foreach ($queryPasienEMRRJ as $key => $item) {
+            $getlisttask = json_decode($this->getlisttask($item->nobooking)->getContent(), true);
+            foreach ($getlisttask['response'] as $task) {
+                // dd($task);
+                if (isset($task['taskid'])) {
+                    switch ($task) {
+                        case $task['taskid'] == 1:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId1 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 2:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId2 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 3:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId3 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 4:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId4 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 5:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId5 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 6:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId6 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 7:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId7 = $task['wakturs'];
+                            break;
+                    }
+                }
+            }
+            // dd($queryPasienEMRRJ[$key]);
+        }
+
+
         $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($date);
 
         //return view

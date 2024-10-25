@@ -49,8 +49,33 @@ export default function PasienEMRRawatJalan(props) {
         );
     }
 
+    function TaskIdStatusKirimBpjs(props) {
+        const { status } = props;
+        let icon;
+
+        if (status) {
+            icon = (
+                <svg className="w-4 h-4 text-green-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clipRule="evenodd" />
+                </svg>
+            );
+        } else {
+            icon = (
+                <svg className="w-4 h-4 text-red-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z" clipRule="evenodd" />
+                </svg>
+            );
+        }
+
+        return (
+            <>
+                {icon}
+            </>
+        );
+    }
+
     function TaskId(props) {
-        const { taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7, status } = props;
+        const { taskId1, taskId2, taskId3, taskId4, taskId5, taskId6, taskId7, status, taskIdKirim1, taskIdKirim2, taskIdKirim3, taskIdKirim4, taskIdKirim5, taskIdKirim6, taskIdKirim7 } = props;
         const bgtaskId1 = taskId1 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
         const bgtaskId2 = taskId2 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
         const bgtaskId3 = taskId3 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
@@ -59,8 +84,15 @@ export default function PasienEMRRawatJalan(props) {
         const bgtaskId6 = taskId6 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
         const bgtaskId7 = taskId7 !== '00/00/0000 00:00:00' ? 'bg-green-200' : 'bg-gray-100';
 
+        const statusTaskIdKirim1 = taskIdKirim1 !== '00/00/0000 00:00:00' ? true : false;
+        const statusTaskIdKirim2 = taskIdKirim2 !== '00/00/0000 00:00:00' ? true : false;
+        const statusTaskIdKirim3 = taskIdKirim3 !== '00/00/0000 00:00:00' ? true : false;
+        const statusTaskIdKirim4 = taskIdKirim4 !== '00/00/0000 00:00:00' ? true : false;
+        const statusTaskIdKirim5 = taskIdKirim5 !== '00/00/0000 00:00:00' ? true : false;
+        const statusTaskIdKirim6 = taskIdKirim6 !== '00/00/0000 00:00:00' ? true : false;
+        const statusTaskIdKirim7 = taskIdKirim7 !== '00/00/0000 00:00:00' ? true : false;
 
-
+        console.log(taskIdKirim5, taskId5, statusTaskIdKirim5);
         return (
             <>
                 <ol className="items-center text-center sm:flex">
@@ -77,6 +109,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId1</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId1}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Masuk Admisi</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim1}></TaskIdStatusKirimBpjs>
                         </div>
                     </li>
                     <li className="relative mb-6 sm:mb-0">
@@ -92,6 +125,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId2</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId2}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Selesai Admisi</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim2}></TaskIdStatusKirimBpjs>
                         </div>
                     </li >
                     <li className="relative mb-6 sm:mb-0">
@@ -107,6 +141,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId3</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId3}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Daftar Poli</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim3}></TaskIdStatusKirimBpjs>
                         </div>
                     </li >
                     <li className="relative mb-6 sm:mb-0">
@@ -122,6 +157,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId4</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId4}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Masuk Poli</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim4}></TaskIdStatusKirimBpjs>
                         </div>
                     </li >
                     <li className="relative mb-6 sm:mb-0">
@@ -137,6 +173,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId5</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId5}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Keluar Poli</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim5}></TaskIdStatusKirimBpjs>
                         </div>
                     </li >
                     <li className="relative mb-6 sm:mb-0">
@@ -152,6 +189,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId6</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId6}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Masuk Apotek</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim6}></TaskIdStatusKirimBpjs>
                         </div>
                     </li >
                     <li className="relative mb-6 sm:mb-0">
@@ -166,6 +204,7 @@ export default function PasienEMRRawatJalan(props) {
                             <h3 className="font-semibold text-gray-900 text- dark:text-white">TaskId7</h3>
                             <time className="block mb-2 text-sm font-normal leading-none text-gray-700 dark:text-gray-500">{taskId7}</time>
                             <p className="text-xs font-normal text-gray-500 dark:text-gray-700">Keluar Apotek</p>
+                            <TaskIdStatusKirimBpjs status={statusTaskIdKirim7}></TaskIdStatusKirimBpjs>
                         </div>
                     </li >
 
@@ -235,6 +274,15 @@ export default function PasienEMRRawatJalan(props) {
         const taskId6 = datadaftar_json?.taskIdPelayanan?.taskId6 || '00/00/0000 00:00:00';
         const taskId7 = datadaftar_json?.taskIdPelayanan?.taskId7 || '00/00/0000 00:00:00';
 
+        const taskIdKirim1 = item?.taskIdBPJSStatusKirimTaskId1 || '00/00/0000 00:00:00';
+        const taskIdKirim2 = item?.taskIdBPJSStatusKirimTaskId2 || '00/00/0000 00:00:00';
+        const taskIdKirim3 = item?.taskIdBPJSStatusKirimTaskId3 || '00/00/0000 00:00:00';
+        const taskIdKirim4 = item?.taskIdBPJSStatusKirimTaskId4 || '00/00/0000 00:00:00';
+        const taskIdKirim5 = item?.taskIdBPJSStatusKirimTaskId5 || '00/00/0000 00:00:00';
+        const taskIdKirim6 = item?.taskIdBPJSStatusKirimTaskId6 || '00/00/0000 00:00:00';
+        const taskIdKirim7 = item?.taskIdBPJSStatusKirimTaskId7 || '00/00/0000 00:00:00';
+
+        console.log(item);
         const taskIdStatus = () => {
             if (taskId1 !== '00/00/0000 00:00:00'
                 && taskId2 !== '00/00/0000 00:00:00'
@@ -351,6 +399,13 @@ export default function PasienEMRRawatJalan(props) {
                             taskId6={taskId6}
                             taskId7={taskId7}
                             status={taskIdStatus()}
+                            taskIdKirim1={taskIdKirim1}
+                            taskIdKirim2={taskIdKirim2}
+                            taskIdKirim3={taskIdKirim3}
+                            taskIdKirim4={taskIdKirim4}
+                            taskIdKirim5={taskIdKirim5}
+                            taskIdKirim6={taskIdKirim6}
+                            taskIdKirim7={taskIdKirim7}
                         ></TaskId>
                     </Table.Cell>
                 </Table.Row >
