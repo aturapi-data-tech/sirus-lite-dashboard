@@ -512,38 +512,37 @@ class PasienRawatJalanController extends Controller
 
         $queryPasienEMRRJ = $this->queryPasienEmrRJ($date, $show);
 
-        foreach ($queryPasienEMRRJ as $key => $item) {
-            $getlisttask = json_decode($this->getlisttask($item->nobooking)->getContent(), true);
-            foreach ($getlisttask['response'] as $task) {
-                // dd($task);
-                if (isset($task['taskid'])) {
-                    switch ($task) {
-                        case $task['taskid'] == 1:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId1 = $task['wakturs'];
-                            break;
-                        case $task['taskid'] == 2:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId2 = $task['wakturs'];
-                            break;
-                        case $task['taskid'] == 3:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId3 = $task['wakturs'];
-                            break;
-                        case $task['taskid'] == 4:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId4 = $task['wakturs'];
-                            break;
-                        case $task['taskid'] == 5:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId5 = $task['wakturs'];
-                            break;
-                        case $task['taskid'] == 6:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId6 = $task['wakturs'];
-                            break;
-                        case $task['taskid'] == 7:
-                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId7 = $task['wakturs'];
-                            break;
-                    }
-                }
-            }
-            // dd($queryPasienEMRRJ[$key]);
-        }
+        // foreach ($queryPasienEMRRJ as $key => $item) {
+        //     $getlisttask = json_decode($this->getlisttask($item->nobooking)->getContent(), true);
+        //     foreach ($getlisttask['response'] as $task) {
+        //         // dd($task);
+        //         if (isset($task['taskid'])) {
+        //             switch ($task) {
+        //                 case $task['taskid'] == 1:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId1 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 2:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId2 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 3:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId3 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 4:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId4 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 5:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId5 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 6:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId6 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 7:
+        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId7 = $task['wakturs'];
+        //                     break;
+        //             }
+        //         }
+        //     }
+        // }
 
 
         $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($date);

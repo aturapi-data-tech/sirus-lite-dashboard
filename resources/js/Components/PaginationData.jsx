@@ -36,10 +36,7 @@ export default function PaginationData(props) {
 
         clearTimeout(window.pageRefimeout);
         window.pageRefimeout = setTimeout(() => {
-            selector.filter.date.trim() === "" || selector.filter.date === null ?
-                router.get(route(route().current()), {}, { preserveState: true, replace: true, only: [] })
-                :
-                router.get(route(route().current()), { date: selector.filter.date, page: currentPage, show: selector.filter.show }, { preserveState: true, replace: true, only: [] })
+            router.get(route(route().current()), { date: selector.filter.date, page: currentPage, show: selector.filter.show }, { preserveState: true, replace: true, only: [] })
         }, 300);
     };
 

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import CrudTopBar from '@/Components/CrudTopBar';
 import { useEffect } from 'react';
 import { router } from '@inertiajs/react'
-
+import moment from 'moment';
 
 export default function PasienEMRRawatJalan(props) {
     const { auth, date, queryPasienEMRRJ, queryPasienEmrRJKelengkapanPengisianHarian } = props;
@@ -92,7 +92,24 @@ export default function PasienEMRRawatJalan(props) {
         const statusTaskIdKirim6 = taskIdKirim6 !== '00/00/0000 00:00:00' ? true : false;
         const statusTaskIdKirim7 = taskIdKirim7 !== '00/00/0000 00:00:00' ? true : false;
 
-        console.log(taskIdKirim5, taskId5, statusTaskIdKirim5);
+        const waktuTungguPoli = () => {
+            const time3 = moment(taskId3, "DD/MM/YYYY hh:mm:ss");
+            const time4 = moment(taskId4, "DD/MM/YYYY hh:mm:ss");
+            return time4.diff(time3, 'minutes');
+        }
+
+        const waktuLayananPoli = () => {
+            const time4 = moment(taskId4, "DD/MM/YYYY hh:mm:ss");
+            const time5 = moment(taskId5, "DD/MM/YYYY hh:mm:ss");
+            return time5.diff(time4, 'minutes');
+        }
+
+        const waktuLayananApotek = () => {
+            const time6 = moment(taskId6, "DD/MM/YYYY hh:mm:ss");
+            const time7 = moment(taskId7, "DD/MM/YYYY hh:mm:ss");
+            return time7.diff(time6, 'minutes');
+        }
+
         return (
             <>
                 <ol className="items-center text-center sm:flex">
@@ -213,13 +230,13 @@ export default function PasienEMRRawatJalan(props) {
                 </ol >
                 <div className='grid grid-cols-3 gap-2 mt-2 text-center text-gray-900'>
                     <p>
-                        Waktu Tunggu Polli : {'xxxx'}
+                        Waktu Tunggu Polli : {waktuTungguPoli()} menit
                     </p>
                     <p>
-                        Waktu Layanan Polli : {'xxxx'}
+                        Waktu Layanan Polli : {waktuLayananPoli()} menit
                     </p>
                     <p>
-                        Waktu Layanan Apotek : {'xxxx'}
+                        Waktu Layanan Apotek : {waktuLayananApotek()} menit
                     </p>
                 </div>
             </>
@@ -282,7 +299,6 @@ export default function PasienEMRRawatJalan(props) {
         const taskIdKirim6 = item?.taskIdBPJSStatusKirimTaskId6 || '00/00/0000 00:00:00';
         const taskIdKirim7 = item?.taskIdBPJSStatusKirimTaskId7 || '00/00/0000 00:00:00';
 
-        console.log(item);
         const taskIdStatus = () => {
             if (taskId1 !== '00/00/0000 00:00:00'
                 && taskId2 !== '00/00/0000 00:00:00'
@@ -448,6 +464,9 @@ export default function PasienEMRRawatJalan(props) {
             </div>
         )
     }
+
+
+
 
     return (
         <PageLayout user={auth.user}>

@@ -18,10 +18,7 @@ export default function CrudTopBar(props) {
 
         clearTimeout(window.dateRefimeout);
         window.dateRefimeout = setTimeout(() => {
-            selector.filter.date.trim() === "" || selector.filter.date === null ?
-                router.get(route(route().current()), {}, { preserveState: true, replace: true, only: [] })
-                :
-                router.get(route(route().current()), { date: e.target.value, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
+            router.get(route(route().current()), { date: e.target.value, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
         }, 300);
     };
 
