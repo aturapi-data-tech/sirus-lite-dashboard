@@ -18,12 +18,15 @@ const filterSlice = createSlice({
         },
         setFilterDate: (state, action) => {
             state.filter.date = action.payload;
+            console.log('filterDate updated', action.payload);
         },
         setFilterShow: (state, action) => {
             state.filter.show = action.payload;
         },
         setFilterPage: (state, action) => {
             state.filter.page = action.payload;
+            console.log('setFilterPage updated', action.payload);
+
         },
     },
 });

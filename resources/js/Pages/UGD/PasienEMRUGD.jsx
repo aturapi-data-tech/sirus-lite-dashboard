@@ -3,26 +3,28 @@ import { useState, useEffect } from 'react';
 
 import PageLayout from '@/Layouts/PageLayout';
 import { TextInput, Button, Label, Table, Badge } from 'flowbite-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import CrudTopBar from '@/Components/CrudTopBar';
 import PaginationData from '@/Components/PaginationData';
 import { router } from '@inertiajs/react'
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
+import { setFilterDate } from '@/redux/slices/filterSlice';
 
 export default function PasienEMRUGD(props) {
     const { auth, date, queryPasienEMRUgd, queryPasienEmrUgdKelengkapanPengisianHarian } = props;
 
-    const [dateRef, setdateRef] = useState(date);
 
+    const dispatch = useDispatch();
 
     const selector = useSelector((state) => state.filter);
 
     useEffect(() => {
+        dispatch(setFilterDate(date));
         clearTimeout(window.dateRefimeout);
         window.dateRefimeout = setTimeout(() => {
             router.get(route(route().current()), { date: selector.filter.date || date, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
         }, 300);
-    }, []);
+    }, [dispatch, date, selector.filter.date, selector.filter.page, selector.filter.show]);
 
 
 
@@ -250,7 +252,7 @@ export default function PasienEMRUGD(props) {
             <div className='mb-4'>
                 <ChartUmumBpjs
                     data={queryPasienEmrUgdKelengkapanPengisianHarian}
-                    dateRef={dateRef} />
+                    dateRef={selector.filter.date} />
             </div>
 
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>

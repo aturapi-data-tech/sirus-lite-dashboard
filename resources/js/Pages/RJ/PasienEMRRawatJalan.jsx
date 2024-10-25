@@ -2,26 +2,27 @@ import PageLayout from '@/Layouts/PageLayout';
 import { Table, Badge } from 'flowbite-react';
 import PaginationData from '@/Components/PaginationData';
 import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import CrudTopBar from '@/Components/CrudTopBar';
 import { useEffect } from 'react';
 import { router } from '@inertiajs/react'
+import { setFilterDate } from '@/redux/slices/filterSlice';
 
 
 export default function PasienEMRRawatJalan(props) {
     const { auth, date, queryPasienEMRRJ, queryPasienEmrRJKelengkapanPengisianHarian } = props;
 
-
-
+    const dispatch = useDispatch();
 
     const selector = useSelector((state) => state.filter);
 
     useEffect(() => {
+        dispatch(setFilterDate(date));
         clearTimeout(window.dateRefimeout);
         window.dateRefimeout = setTimeout(() => {
             router.get(route(route().current()), { date: selector.filter.date || date, page: selector.filter.page, show: selector.filter.show }, { preserveState: true, replace: true, only: [] });
         }, 300);
-    }, []);
+    }, [dispatch, date, selector.filter.date, selector.filter.page, selector.filter.show]);
 
     function TableDataRow(props) {
         const {
