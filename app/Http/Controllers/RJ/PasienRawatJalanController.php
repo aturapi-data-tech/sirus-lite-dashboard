@@ -27,7 +27,7 @@ class PasienRawatJalanController extends Controller
         ]);
     }
 
-    private function queryMyData($search): Collection
+    public function queryMyData($search): Collection
     {
         $query = DB::table('rsmst_doctors')
             ->select(
@@ -71,7 +71,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    private function queryPasienRJUmum($yearRjRef): Collection
+    public function queryPasienRJUmum($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')->select(
             DB::raw("to_char(rj_date,'mm/yyyy') AS rj_date"),
@@ -91,7 +91,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    private function queryPasienRJBpjs($yearRjRef): Collection
+    public function queryPasienRJBpjs($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -114,7 +114,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    private function queryPasienRJKronis($yearRjRef): Collection
+    public function queryPasienRJKronis($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -663,7 +663,7 @@ class PasienRawatJalanController extends Controller
             }
         });
 
-        return $waktuLayananPoli;
+        return $waktuLayananPoli ?? 0;
     }
 
     public function getRataWaktuLayananApotek($dateRef): int
@@ -702,6 +702,6 @@ class PasienRawatJalanController extends Controller
             }
         });
 
-        return $waktuLayananPoli;
+        return $waktuLayananPoli ?? 0;
     }
 }
