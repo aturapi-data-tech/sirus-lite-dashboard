@@ -9,13 +9,19 @@ import moment from 'moment';
 
 
 export default function PasienEMRRawatJalan(props) {
-    const { auth, date, queryPasienEMRRJ, getlistTaskIdAntrianLengkap } = props;
+    const { auth, date, queryPasienEMRRJ, getlistTaskIdAntrianLengkap, getRataWaktuLayananPoli, getRataWaktuLayananApotek } = props;
 
 
 
 
     const selector = useSelector((state) => state.filter);
 
+    function convertRataWaktuLayanan(minutes) {
+        const duration = moment.duration(minutes, 'minutes');
+        const hours = Math.floor(duration.asHours());
+        const mins = duration.minutes();
+        return `${hours} jam ${mins} menit`;
+    }
 
 
     useEffect(() => {
@@ -452,6 +458,16 @@ export default function PasienEMRRawatJalan(props) {
                         Jumlah Antrian Tidak Lengkap : <span className='font-bold'>{queryPasienEMRRJ.total - getlistTaskIdAntrianLengkap}</span>
 
                     </div>
+                </div>
+                <div className='flex justify-between'>
+                    <div>
+                        Rata Waktu Pelayanan Poli : <span className='font-bold'>{convertRataWaktuLayanan(getRataWaktuLayananPoli)}</span>
+                    </div>
+
+                    <div>
+                        Rata Waktu Pelayanan Apotek : <span className='font-bold'>{convertRataWaktuLayanan(getRataWaktuLayananApotek)}</span>
+                    </div>
+
                 </div>
                 <CrudTopBar date={date}></CrudTopBar>
 
