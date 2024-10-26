@@ -27,7 +27,7 @@ class PasienRawatJalanController extends Controller
         ]);
     }
 
-    public function queryMyData($search): Collection
+    private function queryMyData($search): Collection
     {
         $query = DB::table('rsmst_doctors')
             ->select(
@@ -49,12 +49,29 @@ class PasienRawatJalanController extends Controller
     }
 
 
-
-
-
     // umum bpjs poli
     ///////////////////////////////////////////////////////
-    public function queryPasienRJUmum($yearRjRef): Collection
+    private function queryPasien($dateRef): Collection
+    {
+        $myRefstatusId = 'A';
+        $myRefdate = $dateRef;
+
+        $query = DB::table('rstxn_rjhdrs')
+            ->select(
+                DB::raw("to_char(rj_date,'dd/mm/yyyy') AS rj_date"),
+                DB::raw("to_char(rj_date,'yyyymmdd') AS rj_date1"),
+                'datadaftarpolirj_json'
+            )
+            ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            ->where('rj_status', '!=', ['A', 'F'])
+            ->where('klaim_id', '!=', 'KR')
+            ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
+            ->get();
+
+        return $query;
+    }
+
+    private function queryPasienRJUmum($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')->select(
             DB::raw("to_char(rj_date,'mm/yyyy') AS rj_date"),
@@ -74,7 +91,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryPasienRJBpjs($yearRjRef): Collection
+    private function queryPasienRJBpjs($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -97,7 +114,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryPasienRJKronis($yearRjRef): Collection
+    private function queryPasienRJKronis($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -152,7 +169,7 @@ class PasienRawatJalanController extends Controller
             ->first(), true), true);
         return $query;
     }
-    public function queryPasienRJUmumPoli($yearRjRef, $poliId = 1): Collection
+    private function queryPasienRJUmumPoli($yearRjRef, $poliId = 1): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -178,7 +195,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryPasienRJBpjsPoli($yearRjRef, $poliId = 1): Collection
+    private function queryPasienRJBpjsPoli($yearRjRef, $poliId = 1): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -202,7 +219,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryPasienRJKronisPoli($yearRjRef, $poliId = 1): Collection
+    private function queryPasienRJKronisPoli($yearRjRef, $poliId = 1): Collection
     {
         $query = DB::table('rstxn_rjhdrs')
             ->select(
@@ -249,7 +266,9 @@ class PasienRawatJalanController extends Controller
         ]);
     }
 
-    public function queryPasienEmrRJ($dateRef, $show = 10)
+
+
+    private function queryPasienEmrRJ($dateRef, $show = 10)
     {
         $myRefstatusId = 'A';
         $myRefdate = $dateRef;
@@ -282,10 +301,7 @@ class PasienRawatJalanController extends Controller
             ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
             ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
-
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
-
-
             ->orderBy('dr_name',  'asc')
             ->orderBy('shift',  'asc')
             ->orderBy('no_antrian',  'desc')
@@ -295,20 +311,11 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryPasienEmrRJKelengkapanPengisianHarian($dateRef): array
+    private function queryPasienEmrRJKelengkapanPengisianHarian($dateRef): array
     {
         //total lengkap
         ////////////////////////////////////////////////
-        $queryTotal = DB::table('rstxn_rjhdrs')
-            ->select(
-                DB::raw("to_char(rj_date,'dd/mm/yyyy') AS rj_date"),
-                DB::raw("to_char(rj_date,'yyyymmdd') AS rj_date1"),
-                'datadaftarpolirj_json'
-            )
-            ->where('rj_status', '!=', ['A', 'F'])
-            ->where('klaim_id', '!=', 'KR')
-            ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $dateRef)
-            ->get();
+        $queryTotal = $this->queryPasien($dateRef);
 
         //    cari berdasarkan JSON Table
         // emr
@@ -389,7 +396,7 @@ class PasienRawatJalanController extends Controller
         ]);
     }
 
-    public function queryBookingMjkn($monthRef): Collection
+    private function queryBookingMjkn($monthRef): Collection
     {
 
         $query = DB::table('referensi_mobilejkn_bpjs')->select(
@@ -408,7 +415,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryBookingMjknCheckin($monthRef): Collection
+    private function queryBookingMjknCheckin($monthRef): Collection
     {
         $query = DB::table('referensi_mobilejkn_bpjs')->select(
             DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
@@ -424,7 +431,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryBookingMjknBelum($monthRef): Collection
+    private function queryBookingMjknBelum($monthRef): Collection
     {
         $query = DB::table('referensi_mobilejkn_bpjs')->select(
             DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
@@ -440,7 +447,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryBookingMjknBatal($monthRef): Collection
+    private function queryBookingMjknBatal($monthRef): Collection
     {
         $query = DB::table('referensi_mobilejkn_bpjs')->select(
             DB::raw("to_char(to_date(tanggalperiksa,'yyyy-mm-dd'),'dd/mm/yyyy') AS tanggalperiksa"),
@@ -456,7 +463,7 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
-    public function queryDataBookingMjkn($monthRef, $show = 10)
+    private function queryDataBookingMjkn($monthRef, $show = 10)
     {
 
         $query = DB::table('referensi_mobilejkn_bpjs')
@@ -513,41 +520,41 @@ class PasienRawatJalanController extends Controller
 
 
         $queryPasienEMRRJ = $this->queryPasienEmrRJ($date, $show);
+        $getlistTaskIdAntrianLengkap = $this->getlistTaskIdAntrianLengkap($date);
 
-        // foreach ($queryPasienEMRRJ as $key => $item) {
-        //     $getlisttask = json_decode($this->getlisttask($item->nobooking)->getContent(), true);
-        //     foreach ($getlisttask['response'] as $task) {
-        //         // dd($task);
-        //         if (isset($task['taskid'])) {
-        //             switch ($task) {
-        //                 case $task['taskid'] == 1:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId1 = $task['wakturs'];
-        //                     break;
-        //                 case $task['taskid'] == 2:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId2 = $task['wakturs'];
-        //                     break;
-        //                 case $task['taskid'] == 3:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId3 = $task['wakturs'];
-        //                     break;
-        //                 case $task['taskid'] == 4:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId4 = $task['wakturs'];
-        //                     break;
-        //                 case $task['taskid'] == 5:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId5 = $task['wakturs'];
-        //                     break;
-        //                 case $task['taskid'] == 6:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId6 = $task['wakturs'];
-        //                     break;
-        //                 case $task['taskid'] == 7:
-        //                     $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId7 = $task['wakturs'];
-        //                     break;
-        //             }
-        //         }
-        //     }
-        // }
+        foreach ($queryPasienEMRRJ as $key => $item) {
+            $getlisttask = json_decode($this->getlisttask($item->nobooking)->getContent(), true);
+            foreach ($getlisttask['response'] as $task) {
+                // dd($task);
+                if (isset($task['taskid'])) {
+                    switch ($task) {
+                        case $task['taskid'] == 1:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId1 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 2:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId2 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 3:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId3 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 4:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId4 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 5:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId5 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 6:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId6 = $task['wakturs'];
+                            break;
+                        case $task['taskid'] == 7:
+                            $queryPasienEMRRJ[$key]->taskIdBPJSStatusKirimTaskId7 = $task['wakturs'];
+                            break;
+                    }
+                }
+            }
+        }
 
 
-        $queryPasienEmrRJKelengkapanPengisianHarian = $this->queryPasienEmrRJKelengkapanPengisianHarian($date);
 
         //return view
         return inertia('RJ/PasienTaskIdRawatJalan', [
@@ -555,7 +562,52 @@ class PasienRawatJalanController extends Controller
             'page' => $page,
             'show' => $show,
             'queryPasienEMRRJ' => $queryPasienEMRRJ,
-            'queryPasienEmrRJKelengkapanPengisianHarian' => $queryPasienEmrRJKelengkapanPengisianHarian
+            'getlistTaskIdAntrianLengkap' => $getlistTaskIdAntrianLengkap
         ]);
+    }
+
+    public function getlistTaskIdAntrianLengkap($dateRef): int
+    {
+        $queryTotal = $this->queryPasien($dateRef);
+
+        //    cari berdasarkan JSON Table
+        // emr
+        $queryTaskIdAntrianLengkap = $queryTotal->filter(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+
+            if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                return 'x';
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                return 'x';
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                return 'x';
+            }
+        })->count();
+
+        return $queryTaskIdAntrianLengkap;
     }
 }

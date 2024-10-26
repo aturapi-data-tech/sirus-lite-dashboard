@@ -1,7 +1,6 @@
 import PageLayout from '@/Layouts/PageLayout';
 import { Table, Badge } from 'flowbite-react';
 import PaginationData from '@/Components/PaginationData';
-import MyApexCharts from '@/Layouts/Chart/MyApexCharts';
 import { useSelector } from 'react-redux';
 import CrudTopBar from '@/Components/CrudTopBar';
 import { useEffect } from 'react';
@@ -10,7 +9,7 @@ import moment from 'moment';
 
 
 export default function PasienEMRRawatJalan(props) {
-    const { auth, date, queryPasienEMRRJ, queryPasienEmrRJKelengkapanPengisianHarian } = props;
+    const { auth, date, queryPasienEMRRJ, getlistTaskIdAntrianLengkap } = props;
 
 
 
@@ -436,56 +435,24 @@ export default function PasienEMRRawatJalan(props) {
     }
 
 
-    function ChartUmumBpjs(props) {
-        const { dateRef, data } = props;
-
-        const TaskIdLengkap = [data.queryTotal];
-        const TaskIdLengkapDesc = 'Lengkap';
-
-        const TaskIdTidakLengkap = [data.queryLengkap];
-        const TaskIdTidakLengkapDesc = 'Tidak Lengkap';
-
-
-        const rjDate = [dateRef];
-
-
-        return (
-            <div className='bg-white border border-gray-200 rounded-lg shadow-sm'>
-                <div className='grid grid-cols-2 mx-2 '>
-                    <MyApexCharts myType={'bar'} myWidth={'100%'} myCategories={rjDate} myData={[
-                        {
-                            data: TaskIdLengkap,
-                            name: TaskIdLengkapDesc
-                        },
-                        {
-                            data: TaskIdTidakLengkap,
-                            name: TaskIdTidakLengkapDesc
-                        }
-                    ]}
-                        myChartTitle={'Task Id ' + rjDate} />
-
-
-
-                </div>
-            </div>
-        )
-    }
-
-
-
 
     return (
         <PageLayout user={auth.user}>
 
-            <div className='mb-4'>
-                <ChartUmumBpjs
-                    data={queryPasienEmrRJKelengkapanPengisianHarian}
-                    dateRef={selector.filter.date} />
-            </div>
-
-
             <div className='h-[calc(100vh-100px)]  p-4 bg-white border border-gray-200 rounded-lg shadow-sm '>
 
+                <div className='flex justify-between'>
+                    <div>
+                        Jumlah Antrian : <span className='font-bold'>{queryPasienEMRRJ.total}</span>
+                    </div>
+                    <div>
+                        Jumlah Antrian Lengkap :<span className='font-bold'>{getlistTaskIdAntrianLengkap}</span>
+                    </div>
+                    <div>
+                        Jumlah Antrian Tidak Lengkap : <span className='font-bold'>{queryPasienEMRRJ.total - getlistTaskIdAntrianLengkap}</span>
+
+                    </div>
+                </div>
                 <CrudTopBar date={date}></CrudTopBar>
 
                 <div className='h-[calc(100vh-180px)] overflow-auto'>
