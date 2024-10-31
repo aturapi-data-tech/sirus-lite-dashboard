@@ -570,7 +570,7 @@ class PasienRawatJalanController extends Controller
         ]);
     }
 
-    public function getlistTaskIdAntrianLengkap($dateRef): int
+    private function getlistTaskIdAntrianLengkap($dateRef): int
     {
         $queryTotal = $this->queryPasien($dateRef);
 
@@ -615,7 +615,7 @@ class PasienRawatJalanController extends Controller
         return $queryTaskIdAntrianLengkap;
     }
 
-    public function getRataWaktuLayananPoli($dateRef): int
+    private function getRataWaktuLayananPoli($dateRef): int
     {
         $queryTotal = $this->queryPasien($dateRef);
 
@@ -666,7 +666,7 @@ class PasienRawatJalanController extends Controller
         return $waktuLayananPoli ?? 0;
     }
 
-    public function getRataWaktuLayananApotek($dateRef): int
+    private function getRataWaktuLayananApotek($dateRef): int
     {
         $queryTotal = $this->queryPasien($dateRef);
 
@@ -703,5 +703,48 @@ class PasienRawatJalanController extends Controller
         });
 
         return $waktuLayananPoli ?? 0;
+    }
+
+
+    // LOG JKN_MOBILE
+    ///////////////////////////////////////////////////////
+    public function indexLogJknMobile(Request $request)
+    {
+        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('d/m/Y');
+        $page = $request->input('page') ? $request->input('page') : 1;
+        $show = $request->input('show') ? $request->input('show') : 10;
+        $find = $request->input('find') ? $request->input('find') : '';
+
+
+        $queryLogJknMobile = $this->queryLogJknMobile($date, $show);
+
+
+
+
+        //return view
+        return inertia('BPJS/LogJknMobile', [
+            'date' => $date,
+            'page' => $page,
+            'show' => $show,
+            'queryLogJknMobile' => $queryLogJknMobile,
+
+        ]);
+    }
+
+    private function queryLogJknMobile($dateRef, $show = 10)
+    {
+        $myRefdate = $dateRef;
+        $query = DB::table('api_log_status')
+            ->select(
+                DB::raw("to_char(datetime,'dd/mm/yyyy hh24:mi:ss') AS datetime"),
+                DB::raw("to_char(datetime,'yyyymmddhh24miss') AS datetime1"),
+                'request',
+                'response'
+            )
+            ->where(DB::raw("to_char(datetime,'dd/mm/yyyy')"), '=', $myRefdate)
+            ->orderBy('datetime1',  'desc')
+            ->paginate($show);
+
+        return $query;
     }
 }

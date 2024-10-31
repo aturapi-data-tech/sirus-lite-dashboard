@@ -35,6 +35,10 @@ export default function SideBar() {
                     {/* </Sidebar.Item> */}
 
                     {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Sidebar.Item icon={HiChartPie} href={route('BPJS.LogJknMobile')}>Log BPJS MJKN</Sidebar.Item>
+                    {/* </Sidebar.Item> */}
+
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
                     <Sidebar.Item icon={HiChartPie} href={route('MJKN.BookingMJKN')}>Booking dari MJKN</Sidebar.Item>
                     {/* </Sidebar.Item> */}
 

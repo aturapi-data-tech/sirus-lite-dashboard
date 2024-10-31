@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/BPJS/ApiBpjsWSChecking', [ApiBpjsController::class, 'index'])->name('BPJS.ApiBpjsWSChecking');
     Route::get('/BPJS/ref_poliklinik', [ApiBpjsController::class, 'ref_poliklinik'])->name('BPJS.ref_poliklinik');
+    Route::get('/BPJS/LogJknMobile', [PasienRawatJalanController::class, 'indexLogJknMobile'])->name('BPJS.LogJknMobile');
 
 
 
