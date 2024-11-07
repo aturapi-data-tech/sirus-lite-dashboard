@@ -24,12 +24,32 @@ export default function PasienEMRRawatJalan(props) {
     }, []);
 
 
+    // sum jml kunungan
+    const totalQueryBookingMjkn = queryBookingMjkn.reduce((total, item) => {
+        // Pastikan jml_queryBookingMjkn adalah angka dengan parseInt
+        return total + parseInt(item.jml_kunjungan);
+    }, 0);
+    const totalQueryBookingMjknCheckin = queryBookingMjknCheckin.reduce((total, item) => {
+        // Pastikan jml_queryBookingMjknCheckin adalah angka dengan parseInt
+        return total + parseInt(item.jml_kunjungan);
+    }, 0);
+    const totalQueryBookingMjknBelum = queryBookingMjknBelum.reduce((total, item) => {
+        // Pastikan jml_queryBookingMjknBelum adalah angka dengan parseInt
+        return total + parseInt(item.jml_kunjungan);
+    }, 0);
+    const totalQueryBookingMjknBatal = queryBookingMjknBatal.reduce((total, item) => {
+        // Pastikan jml_queryBookingMjknBatal adalah angka dengan parseInt
+        return total + parseInt(item.jml_kunjungan);
+    }, 0);
+
+
+
+
     function TableDataRow(props) {
         const {
             item,
             index
         } = props;
-
 
         return (
             <>
@@ -214,12 +234,31 @@ export default function PasienEMRRawatJalan(props) {
 
                 <div className='h-[calc(100vh-180px)] overflow-auto'>
                     <div className='my-2'>
+                        <div className='grid grid-cols-4 my-4'>
+                            <div className='text-xs text-center'>
+                                <span>Mjkn :{totalQueryBookingMjkn}
+                                </span>
+                            </div>
+                            <div className='text-xs text-center'>
+                                <span>Checkin : {totalQueryBookingMjknCheckin}
+                                </span>
+                            </div>
+                            <div className='text-xs text-center'>
+                                <span>Belum :  {totalQueryBookingMjknBelum}
+                                </span>
+                            </div>
+                            <div className='text-xs text-center'>
+                                <span>Batal :{totalQueryBookingMjknBatal}
+                                </span>
+                            </div>
+                        </div>
                         <ChartMJKN
                             queryBookingMjkn={queryBookingMjkn}
                             queryBookingMjknCheckin={queryBookingMjknCheckin}
                             queryBookingMjknBelum={queryBookingMjknBelum}
                             queryBookingMjknBatal={queryBookingMjknBatal}
                             monthRef={selector.filter.date} />
+
                     </div>
 
 
