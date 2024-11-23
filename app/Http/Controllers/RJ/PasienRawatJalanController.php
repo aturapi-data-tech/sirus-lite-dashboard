@@ -62,7 +62,7 @@ class PasienRawatJalanController extends Controller
                 DB::raw("to_char(rj_date,'yyyymmdd') AS rj_date1"),
                 'datadaftarpolirj_json'
             )
-            ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            // ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
             ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
@@ -298,7 +298,7 @@ class PasienRawatJalanController extends Controller
                 'push_antrian_bpjs_json',
                 'datadaftarpolirj_json'
             )
-            ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            // ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
             ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
