@@ -66,6 +66,7 @@ class PasienRawatJalanController extends Controller
             ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
+            ->orderBy('rj_date1',  'desc')
             ->get();
 
         return $query;
@@ -302,10 +303,10 @@ class PasienRawatJalanController extends Controller
             ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
-            ->orderBy('dr_name',  'asc')
+            ->orderBy('rj_date1',  'desc')
             ->orderBy('shift',  'asc')
             ->orderBy('no_antrian',  'desc')
-            ->orderBy('rj_date1',  'desc')
+            ->orderBy('dr_name',  'asc')
             ->paginate($show);
 
         return $query;
