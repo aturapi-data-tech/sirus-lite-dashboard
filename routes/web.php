@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/RJ/PasienRawatJalanPoli', [PasienRawatJalanController::class, 'indexRJPoli'])->name('RJ.PasienRawatJalanPoli');
     Route::get('/RJ/PasienEMRRawatJalan', [PasienRawatJalanController::class, 'indexEMRRJ'])->name('RJ.PasienEMRRawatJalan');
     Route::get('/RJ/PasienTaskIdRawatJalan', [PasienRawatJalanController::class, 'indexTaskIdRJ'])->name('RJ.PasienTaskIdRawatJalan');
+    Route::get('/RJ/PasienTaskIdRawatJalanBulanan', [PasienRawatJalanController::class, 'indexTaskIdRJBulanan'])->name('RJ.PasienTaskIdRawatJalanBulanan');
 
 
 

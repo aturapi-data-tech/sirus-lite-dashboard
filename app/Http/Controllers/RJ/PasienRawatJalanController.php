@@ -72,6 +72,27 @@ class PasienRawatJalanController extends Controller
         return $query;
     }
 
+    private function queryPasienBulanan($dateRef): Collection
+    {
+        $myRefstatusId = 'A';
+        $myRefdate = $dateRef;
+
+        $query = DB::table('rstxn_rjhdrs')
+            ->select(
+                DB::raw("to_char(rj_date,'dd/mm/yyyy') AS rj_date"),
+                DB::raw("to_char(rj_date,'yyyymmdd') AS rj_date1"),
+                'datadaftarpolirj_json'
+            )
+            // ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            ->where('rj_status', '!=', ['A', 'F'])
+            ->where('klaim_id', '!=', 'KR')
+            ->where(DB::raw("to_char(rj_date,'mm/yyyy')"), '=', $myRefdate)
+            ->orderBy('rj_date1',  'desc')
+            ->get();
+
+        return $query;
+    }
+
     public function queryPasienRJUmum($yearRjRef): Collection
     {
         $query = DB::table('rstxn_rjhdrs')->select(
@@ -303,6 +324,49 @@ class PasienRawatJalanController extends Controller
             ->where('rj_status', '!=', ['A', 'F'])
             ->where('klaim_id', '!=', 'KR')
             ->where(DB::raw("to_char(rj_date,'dd/mm/yyyy')"), '=', $myRefdate)
+            ->orderBy('rj_date1',  'desc')
+            ->orderBy('shift',  'asc')
+            ->orderBy('no_antrian',  'desc')
+            ->orderBy('dr_name',  'asc')
+            ->paginate($show);
+
+        return $query;
+    }
+
+    private function queryPasienEmrRJBulanan($dateRef, $show = 10)
+    {
+        $myRefstatusId = 'A';
+        $myRefdate = $dateRef;
+
+        $query = DB::table('rsview_rjkasir')
+            ->select(
+                DB::raw("to_char(rj_date,'dd/mm/yyyy hh24:mi:ss') AS rj_date"),
+                DB::raw("to_char(rj_date,'yyyymmddhh24miss') AS rj_date1"),
+                'rj_no',
+                'reg_no',
+                'reg_name',
+                'sex',
+                'address',
+                'thn',
+                DB::raw("to_char(birth_date,'dd/mm/yyyy') AS birth_date"),
+                'poli_id',
+                'poli_desc',
+                'dr_id',
+                'dr_name',
+                'klaim_id',
+                'shift',
+                'vno_sep',
+                'no_antrian',
+                'rj_status',
+                'nobooking',
+                'push_antrian_bpjs_status',
+                'push_antrian_bpjs_json',
+                'datadaftarpolirj_json'
+            )
+            // ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            ->where('rj_status', '!=', ['A', 'F'])
+            ->where('klaim_id', '!=', 'KR')
+            ->where(DB::raw("to_char(rj_date,'mm/yyyy')"), '=', $myRefdate)
             ->orderBy('rj_date1',  'desc')
             ->orderBy('shift',  'asc')
             ->orderBy('no_antrian',  'desc')
@@ -571,9 +635,114 @@ class PasienRawatJalanController extends Controller
         ]);
     }
 
+
+    public function indexTaskIdRJBulanan(Request $request)
+    {
+        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('m/Y');
+        $page = $request->input('page') ? $request->input('page') : 1;
+        $show = $request->input('show') ? $request->input('show') : 100;
+        $find = $request->input('find') ? $request->input('find') : '';
+
+
+        $queryPasienEMRRJBulanan = $this->queryPasienEmrRJBulanan($date, $show);
+        $getlistTaskIdAntrianLengkapBulanan = $this->getlistTaskIdAntrianLengkapBulanan($date);
+        $getRataWaktuLayananPoliBulanan = $this->getRataWaktuLayananPoliBulanan($date);
+        $getRataWaktuLayananApotekBulanan = $this->getRataWaktuLayananApotekBulanan($date);
+
+        // foreach ($queryPasienEMRRJBulanan as $key => $item) {
+        //     $getlisttask = json_decode($this->getlisttask($item->nobooking)->getContent(), true);
+        //     foreach ($getlisttask['response'] as $task) {
+        //         // dd($task);
+        //         if (isset($task['taskid'])) {
+        //             switch ($task) {
+        //                 case $task['taskid'] == 1:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId1 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 2:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId2 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 3:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId3 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 4:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId4 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 5:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId5 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 6:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId6 = $task['wakturs'];
+        //                     break;
+        //                 case $task['taskid'] == 7:
+        //                     $queryPasienEMRRJBulanan[$key]->taskIdBPJSStatusKirimTaskId7 = $task['wakturs'];
+        //                     break;
+        //             }
+        //         }
+        //     }
+        // }
+
+
+
+        //return view
+        return inertia('RJ/PasienTaskIdRawatJalanBulanan', [
+            'date' => $date,
+            'page' => $page,
+            'show' => $show,
+            'queryPasienEMRRJBulanan' => $queryPasienEMRRJBulanan,
+            'getlistTaskIdAntrianLengkapBulanan' => $getlistTaskIdAntrianLengkapBulanan,
+            'getRataWaktuLayananPoliBulanan' => $getRataWaktuLayananPoliBulanan,
+            'getRataWaktuLayananApotekBulanan' => $getRataWaktuLayananApotekBulanan
+        ]);
+    }
+
     private function getlistTaskIdAntrianLengkap($dateRef): int
     {
         $queryTotal = $this->queryPasien($dateRef);
+
+        //    cari berdasarkan JSON Table
+        // emr
+        $queryTaskIdAntrianLengkap = $queryTotal->filter(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+
+            if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                return 'x';
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                return 'x';
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                return 'x';
+            }
+        })->count();
+
+        return $queryTaskIdAntrianLengkap;
+    }
+
+    private function getlistTaskIdAntrianLengkapBulanan($dateRef): int
+    {
+        $queryTotal = $this->queryPasienBulanan($dateRef);
 
         //    cari berdasarkan JSON Table
         // emr
@@ -667,9 +836,99 @@ class PasienRawatJalanController extends Controller
         return $waktuLayananPoli ?? 0;
     }
 
+    private function getRataWaktuLayananPoliBulanan($dateRef): int
+    {
+        $queryTotal = $this->queryPasienBulanan($dateRef);
+
+        //    cari berdasarkan JSON Table
+        // emr
+        $waktuLayananPoli = $queryTotal->avg(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+
+            if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                $startTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId3'], 'Asia/Jakarta');
+                $endTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId4'], 'Asia/Jakarta');
+                return $endTime->diffInMinutes($startTime);
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                $startTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId3'], 'Asia/Jakarta');
+                $endTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId4'], 'Asia/Jakarta');
+                return $endTime->diffInMinutes($startTime);
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                $startTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId3'], 'Asia/Jakarta');
+                $endTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId4'], 'Asia/Jakarta');
+                return $endTime->diffInMinutes($startTime);
+            }
+        });
+
+        return $waktuLayananPoli ?? 0;
+    }
+
     private function getRataWaktuLayananApotek($dateRef): int
     {
         $queryTotal = $this->queryPasien($dateRef);
+
+        //    cari berdasarkan JSON Table
+        // emr
+        $waktuLayananPoli = $queryTotal->avg(function ($item) {
+            $datadaftarpolirj_json = json_decode($item->datadaftarpolirj_json, true);
+
+            if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                $startTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId6'], 'Asia/Jakarta');
+                $endTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId7'], 'Asia/Jakarta');
+                return $endTime->diffInMinutes($startTime);
+            } else if (
+                isset($datadaftarpolirj_json['taskIdPelayanan']['taskId1']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId1'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId2']) && empty($datadaftarpolirj_json['taskIdPelayanan']['taskId2'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId3']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId3'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId4']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId4'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId5']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId5'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId6']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId6'])
+                && isset($datadaftarpolirj_json['taskIdPelayanan']['taskId7']) && !empty($datadaftarpolirj_json['taskIdPelayanan']['taskId7'])
+            ) {
+                $startTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId6'], 'Asia/Jakarta');
+                $endTime = Carbon::createFromFormat('d/m/Y H:i:s', $datadaftarpolirj_json['taskIdPelayanan']['taskId7'], 'Asia/Jakarta');
+                return $endTime->diffInMinutes($startTime);
+            }
+        });
+
+        return $waktuLayananPoli ?? 0;
+    }
+
+    private function getRataWaktuLayananApotekBulanan($dateRef): int
+    {
+        $queryTotal = $this->queryPasienBulanan($dateRef);
 
         //    cari berdasarkan JSON Table
         // emr
