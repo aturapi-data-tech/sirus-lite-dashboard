@@ -13,7 +13,7 @@ export default function PasienEMRRawatJalanBulanan(props) {
 
 
 
-
+    console.log(queryPasienEMRRJBulanan.data);
     const selector = useSelector((state) => state.filter);
 
     function convertRataWaktuLayanan(minutes) {
