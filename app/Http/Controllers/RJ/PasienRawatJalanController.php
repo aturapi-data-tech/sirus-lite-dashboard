@@ -695,7 +695,134 @@ class PasienRawatJalanController extends Controller
             'getlistTaskIdAntrianLengkapBulanan' => $getlistTaskIdAntrianLengkapBulanan,
             'getRataWaktuLayananPoliBulanan' => $getRataWaktuLayananPoliBulanan,
             'getRataWaktuLayananApotekBulanan' => $getRataWaktuLayananApotekBulanan,
-            'datadaftarpolirj' => json_encode($datadaftarpolirj),
+        ]);
+    }
+
+    public function indexTaskIdRJBulananPerDokter(Request $request)
+    {
+        $date = $request->input('date') ? $request->input('date') : Carbon::now()->format('m/Y');
+        $page = $request->input('page') ? $request->input('page') : 1;
+        $show = $request->input('show') ? $request->input('show') : 10;
+        $find = $request->input('find') ? $request->input('find') : '';
+
+
+        $queryPasienEMRRJBulananPerDokter = DB::table('rsview_rjkasir')
+            ->select(
+                'datadaftarpolirj_json'
+            )
+            // ->where(DB::raw("nvl(erm_status,'A')"), '=', $myRefstatusId)
+            ->where('rj_status', '!=', ['A', 'F'])
+            ->where('klaim_id', '!=', 'KR')
+            ->where(DB::raw("to_char(rj_date,'mm/yyyy')"), '=', $date)
+            ->orderBy('rj_no', 'asc')
+            ->get();
+
+
+        $dataDaftarPoliRJ = [];
+        foreach ($queryPasienEMRRJBulananPerDokter as $key => $item) {
+            $dataDaftarPoliRJ[$key] = json_decode($item->datadaftarpolirj_json ?? '{}', true);
+        }
+        // (2) BUAT PENAMPUNG PER DOKTER
+        $rekapDokter = [];  // misal: [ 'dr. A' => [ ... ], 'dr. B' => [ ... ] ]
+
+        // (4) LOOPING TIAP PASIEN
+        foreach ($dataDaftarPoliRJ as $pasien) {
+            $drDesc = $pasien['drDesc'];
+
+            // Jika belum ada di rekap, inisialisasi
+            if (!isset($rekapDokter[$drDesc])) {
+                $rekapDokter[$drDesc] = [
+                    'jumlahPasien' => 0,
+                    // total wait times
+                    'total_admisi' => 0,   // (3->4)
+                    'count_admisi' => 0,
+                    'total_poli' => 0,     // (4->5)
+                    'count_poli' => 0,
+                    'total_apotek' => 0,   // (6->7)
+                    'count_apotek' => 0,
+                    'total_rajal' => 0,   // (6->7)
+                    'count_rajal' => 0,
+                ];
+            }
+            // Tambah jumlah pasien
+            $rekapDokter[$drDesc]['jumlahPasien']++;
+
+            // Ambil tasks
+            $tasks = $pasien['taskIdPelayanan'];
+
+            // Cari data task3,4,5,6,7
+            $t3 = $tasks['taskId3'] ?? null;
+            $t4 = $tasks['taskId4'] ?? null;
+            $t5 = $tasks['taskId5'] ?? null;
+            $t6 = $tasks['taskId6'] ?? null;
+            $t7 = $tasks['taskId7'] ?? null;
+
+            // (A) Waktu Tunggu Admisi = selisih (task3 -> task4)
+            if ($t3 && $t4 && isset($t3) && isset($t4)) {
+                $wait_admisi = Carbon::createFromFormat('d/m/Y H:i:s', $t3)->diffInMinutes(Carbon::createFromFormat('d/m/Y H:i:s', $t4));
+
+                $rekapDokter[$drDesc]['total_admisi'] += $wait_admisi;
+                $rekapDokter[$drDesc]['count_admisi']++;
+            }
+
+            // (B) Waktu Tunggu Poli = selisih (task4 -> task5)
+            if ($t4 && $t5 && isset($t4) && isset($t5)) {
+                $wait_poli = Carbon::createFromFormat('d/m/Y H:i:s', $t4)->diffInMinutes(Carbon::createFromFormat('d/m/Y H:i:s', $t5));
+
+                $rekapDokter[$drDesc]['total_poli'] += $wait_poli;
+                $rekapDokter[$drDesc]['count_poli']++;
+            }
+
+            // (C) Waktu Tunggu Apotek = selisih (task6 -> task7)
+            //   (jika Anda ingin menambahkan task5->6 juga, silakan modifikasi)
+            if ($t6 && $t7 && isset($t6) && isset($t7)) {
+                $wait_apotek = Carbon::createFromFormat('d/m/Y H:i:s', $t6)->diffInMinutes(Carbon::createFromFormat('d/m/Y H:i:s', $t7));
+                $rekapDokter[$drDesc]['total_apotek'] += $wait_apotek;
+                $rekapDokter[$drDesc]['count_apotek']++;
+            }
+
+            if ($t3 && $t7 && isset($t3) && isset($t7)) {
+                $wait_rajal = Carbon::createFromFormat('d/m/Y H:i:s', $t3)->diffInMinutes(Carbon::createFromFormat('d/m/Y H:i:s', $t7));
+                $rekapDokter[$drDesc]['total_rajal'] += $wait_rajal;
+                $rekapDokter[$drDesc]['count_rajal']++;
+            }
+        }
+
+        // (5) HITUNG RATA-RATA / SIAPKAN OUTPUT
+        $hasil = [];
+        foreach ($rekapDokter as $dokter => $val) {
+            // Rata-rata
+            $avg_admisi = ($val['count_admisi'] > 0)
+                ? $val['total_admisi'] / $val['count_admisi']
+                : 0;
+            $avg_poli = ($val['count_poli'] > 0)
+                ? $val['total_poli'] / $val['count_poli']
+                : 0;
+            $avg_apotek = ($val['count_apotek'] > 0)
+                ? $val['total_apotek'] / $val['count_apotek']
+                : 0;
+
+            $avg_rajal = ($val['count_rajal'] > 0)
+                ? $val['total_rajal'] / $val['count_rajal']
+                : 0;
+
+            $hasil[] = [
+                'nama_dokter'        => $dokter,
+                'jumlah_pasien'      => $val['jumlahPasien'],
+                'waktu_tunggu_admisi' => round($avg_admisi, 2),  // dibulatkan 2 desimal
+                'waktu_tunggu_poli'  => round($avg_poli, 2),
+                'waktu_tunggu_apotek' => round($avg_apotek, 2),
+                'waktu_tunggu_rajal' => round($avg_rajal, 2),
+            ];
+        }
+
+        //return view
+        return inertia('RJ/PasienTaskIdRawatJalanBulananPerDokter', [
+            'date' => $date,
+            'page' => $page,
+            'show' => $show,
+            'queryHasilPerDokter' => $hasil,
+            'queryPasienEMRRJBulananPerDokter' => $queryPasienEMRRJBulananPerDokter,
         ]);
     }
 

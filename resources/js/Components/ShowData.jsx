@@ -9,7 +9,14 @@ export default function ShowData() {
         { showNumber: 10 },
         { showNumber: 20 },
         { showNumber: 50 },
-        { showNumber: 100 }
+        { showNumber: 100 },
+        { showNumber: 1000 },
+        { showNumber: 2000 },
+        { showNumber: 3000 },
+        { showNumber: 4000 },
+        { showNumber: 5000 },
+
+
     ];
 
     const dispatch = useDispatch();
