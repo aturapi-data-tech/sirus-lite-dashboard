@@ -681,7 +681,10 @@ class PasienRawatJalanController extends Controller
         //     }
         // }
 
-
+        $datadaftarpolirj = [];
+        foreach ($queryPasienEMRRJBulanan as $key => $item) {
+            $datadaftarpolirj[$key] = json_decode($item->datadaftarpolirj_json, true);
+        }
 
         //return view
         return inertia('RJ/PasienTaskIdRawatJalanBulanan', [
@@ -691,7 +694,8 @@ class PasienRawatJalanController extends Controller
             'queryPasienEMRRJBulanan' => $queryPasienEMRRJBulanan,
             'getlistTaskIdAntrianLengkapBulanan' => $getlistTaskIdAntrianLengkapBulanan,
             'getRataWaktuLayananPoliBulanan' => $getRataWaktuLayananPoliBulanan,
-            'getRataWaktuLayananApotekBulanan' => $getRataWaktuLayananApotekBulanan
+            'getRataWaktuLayananApotekBulanan' => $getRataWaktuLayananApotekBulanan,
+            'datadaftarpolirj' => json_encode($datadaftarpolirj),
         ]);
     }
 

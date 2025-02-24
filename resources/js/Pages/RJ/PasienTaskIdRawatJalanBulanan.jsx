@@ -9,11 +9,11 @@ import moment from 'moment';
 
 
 export default function PasienEMRRawatJalanBulanan(props) {
-    const { auth, date, queryPasienEMRRJBulanan, getlistTaskIdAntrianLengkapBulanan, getRataWaktuLayananPoliBulanan, getRataWaktuLayananApotekBulanan } = props;
+    const { auth, date, datadaftarpolirj, queryPasienEMRRJBulanan, getlistTaskIdAntrianLengkapBulanan, getRataWaktuLayananPoliBulanan, getRataWaktuLayananApotekBulanan } = props;
 
 
 
-    console.log(queryPasienEMRRJBulanan.data);
+    console.log(datadaftarpolirj);
     const selector = useSelector((state) => state.filter);
 
     function convertRataWaktuLayanan(minutes) {
