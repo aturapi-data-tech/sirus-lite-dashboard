@@ -50,6 +50,10 @@ export default function SideBar() {
                     <Sidebar.Item icon={HiChartPie} href={route('MJKN.BookingMJKN')}>Booking dari MJKN</Sidebar.Item>
                     {/* </Sidebar.Item> */}
 
+                    {/* <Sidebar.Item icon={HiChartPie}> */}
+                    <Sidebar.Item icon={HiChartPie} href={route('REKAMMEDIS.10besarpenyakitinap')}>10 Besar Penyakit Rawat Inap</Sidebar.Item>
+                    {/* </Sidebar.Item> */}
+
                     {/* <Sidebar.Item href={route('RJ.PasienRawatJalan')} icon={HiShoppingBag}>
                         Progress. . .
                     </Sidebar.Item>

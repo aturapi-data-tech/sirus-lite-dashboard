@@ -9,6 +9,9 @@ use App\Http\Controllers\RJ\PasienRawatJalanController;
 use App\Http\Controllers\UGD\PasienUGDController;
 use App\Http\Controllers\BPJS\ApiBpjsController;
 
+// use App\Http\Controllers\REKAMMEDIS\RekamMedisRawatJalanController;
+use App\Http\Controllers\REKAMMEDIS\RekamMedisRawatInapController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,6 +60,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::get('/MJKN/BookingMJKN', [PasienRawatJalanController::class, 'indexBookingMjkn'])->name('MJKN.BookingMJKN');
+
+    Route::get('/REKAMMEDIS/10besarpenyakitinap', [RekamMedisRawatInapController::class, 'index10BesarPenyakitInap'])->name('REKAMMEDIS.10besarpenyakitinap');
 });
 
 Route::middleware('auth')->group(function () {
